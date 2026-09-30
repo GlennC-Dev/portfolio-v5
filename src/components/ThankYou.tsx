@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from '@/components/slab'
 
 const CONFETTI_COLORS = [
-  '#FF7A1A', '#FFA155', '#0B1E3F', '#3b82f6',
+  '#1A62FF', '#4D86FF', '#0B1E3F', '#3b82f6',
   '#8b5cf6', '#f59e0b', '#10b981', '#ec4899', '#f43f5e',
 ]
 const REDIRECT_DELAY = 5

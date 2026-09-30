@@ -55,5 +55,5 @@ export const tagColors: Record<FunnelTag, string> = {
   'Lead Capture': '#8b5cf6',
   Booking: '#ec4899',
   Checkout: '#f59e0b',
-  Website: '#FF7A1A',
+  Website: '#1A62FF',
 }
