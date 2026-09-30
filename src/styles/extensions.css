@@ -816,7 +816,7 @@ img.about__stat-badge {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #FF9442 0%, #FF7A1A 60%, #D45F00 100%);
+  background: linear-gradient(135deg, #4D86FF 0%, #1A62FF 60%, #0B3FB0 100%);
   color: #FFFFFF;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
@@ -2900,7 +2900,7 @@ img.about__stat-badge {
   --ap-cable: #d8d2c2;
   --ap-cable-dash: #cdc6b4;
   --ap-port: #c4bca9;
-  --ap-loop: #ff7a1a;
+  --ap-loop: #1a62ff;
 }
 
 /* ---- Dark theme: the whiteboard becomes a dark board, same furniture ---- */
@@ -3171,7 +3171,7 @@ img.about__stat-badge {
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #D45F00;
+  color: #0B3FB0;
 }
 .sampleplan__preview-title {
   font-family: var(--font-display);
@@ -3228,9 +3228,9 @@ img.about__stat-badge {
   color: rgba(11, 30, 63, 0.7);
   letter-spacing: 0.01em;
 }
-.sampleplan__preview-flow-node--trigger  { background: #060C1A; color: #FF7A1A; border-color: #060C1A; }
-.sampleplan__preview-flow-node--decision { background: #FFE6CF; border-color: #FF7A1A; color: #060C1A; }
-.sampleplan__preview-flow-node--success  { background: #D45F00; color: #FFFFFF; border-color: #D45F00; }
+.sampleplan__preview-flow-node--trigger  { background: #060C1A; color: #1A62FF; border-color: #060C1A; }
+.sampleplan__preview-flow-node--decision { background: #D7E4FF; border-color: #1A62FF; color: #060C1A; }
+.sampleplan__preview-flow-node--success  { background: #0B3FB0; color: #FFFFFF; border-color: #0B3FB0; }
 .sampleplan__preview-flow-arrow {
   width: 14px;
   height: 1.5px;
@@ -3249,7 +3249,7 @@ img.about__stat-badge {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.18em;
-  color: #D45F00;
+  color: #0B3FB0;
   padding-top: 4px;
   flex-shrink: 0;
 }

@@ -4,9 +4,9 @@
   --navy-ink:   #060C1A;   /* matches shader dark base for .dark-section */
   --cream:      #F4F4ED;   /* matches shader light base, page bg */
   --white:      #FFFFFF;
-  --orange:     #FF7A1A;   /* CTA, accent bar, active dot */
-  --orange-hover: #FFA155; /* CTA hover state */
-  --orange-ink: #B4490A;   /* accessible orange TEXT on light bg - 4.88:1 on cream, 5.39:1 on white (WCAG AA) */
+  --orange:     #1A62FF;   /* CTA, accent bar, active dot */
+  --orange-hover: #4D86FF; /* CTA hover state */
+  --orange-ink: #0B44C7;   /* accessible accent TEXT on light bg (WCAG AA on cream and white) */
   --muted:      #5A6479;
   --divider:    rgba(11, 30, 63, 0.12);
   --success:    #2E9E6B;   /* form status ok - clears 4.5:1 on navy-ink */
@@ -115,7 +115,7 @@
   --tint:         rgba(255, 255, 255, 0.05);
   --tint-strong:  rgba(255, 255, 255, 0.09);
   --glass:        rgba(14, 22, 38, 0.72);
-  --orange-ink:   #FF9A4D;
+  --orange-ink:   #6BA0FF;
   --panel-dark:   #0B1120;
   --brands-chip-bg:     #F4F4ED;
   --brands-chip-border: rgba(255, 255, 255, 0.14);
