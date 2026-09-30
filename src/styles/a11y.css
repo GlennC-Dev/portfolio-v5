@@ -225,12 +225,12 @@
 :root[data-a11y-contrast='true'] {
   --muted: #2A3550;
   --line: rgba(11, 30, 63, 0.4);
-  --orange-ink: #9A3D06;
+  --orange-ink: #0A3399;
 }
 :root[data-a11y-contrast='true'][data-theme='dark'] {
   --muted: rgba(237, 240, 246, 0.88);
   --line: rgba(255, 255, 255, 0.3);
-  --orange-ink: #FFB070;
+  --orange-ink: #9CC0FF;
 }
 
 /* Reduce motion: every animation and transition stops; drifting tracks hold. */
