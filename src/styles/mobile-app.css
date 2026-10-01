@@ -73,6 +73,44 @@
   .tabbar__tab--primary:active .tabbar__fab { transform: scale(0.92); }
   .tabbar__tab:focus-visible { outline: 2px solid var(--orange); outline-offset: -6px; border-radius: var(--radius-pill); }
 
+  /* ---------- Phone trigger (the old Contact link, now expands instead of navigating) ---------- */
+  .tabbar__tab--phone { position: relative; }
+  .tabbar__fab-btn {
+    all: unset;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+  .tabbar__fab-btn[aria-expanded='true'] .tabbar__fab { transform: rotate(135deg); }
+  .tabbar__popout {
+    position: absolute;
+    bottom: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 14px;
+  }
+  .tabbar__popbtn {
+    all: unset;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--navy);
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 24px -10px rgba(11, 30, 63, 0.35);
+    cursor: pointer;
+    animation: tabbar-pop 220ms var(--ease-spring) both;
+  }
+  .tabbar__popbtn:active { transform: scale(0.92); }
+  .tabbar__popbtn:nth-child(2) { animation-delay: 40ms; }
+  @keyframes tabbar-pop {
+    from { opacity: 0; transform: scale(0.5) translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+
   /* ---------- Theme switch ---------- */
   .theme-btn {
     display: grid;
@@ -149,11 +187,16 @@
   /* ---------- Home: stats ---------- */
   .hstats {
     display: flex;
+    justify-content: center;
     gap: 22px;
     list-style: none;
     margin: 4px 0 2px;
-    padding: 0;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: var(--white);
+    border: 1px solid var(--line);
   }
+  .hstats li { text-align: center; }
   .hstats b { display: block; font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: var(--navy); }
   .hstats span { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 
