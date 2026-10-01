@@ -14,20 +14,20 @@ import { profile } from '@/data/profile'
  * visual. Swap the marks below for your own (any square SVG/PNG in public/).
  */
 
+// 👈 Icon sourcing note (brought over from v4's own comment): Tableau, Power BI, Salesforce and
+// Power Query have no real marks available — same trademark-exclusion situation as the Daily
+// Drivers row on Home. Those four, plus the Lean Six Sigma mark (not a software tool, so there's
+// no brand mark to use at all), are generic original stand-ins, not official logos. n8n, Google
+// Apps Script, Claude, and Gemini have real marks and use them.
+const TABLEAU = { src: '/icons/tableau-generic.svg', name: 'Tableau' }
+const POWERBI = { src: '/icons/powerbi-generic.svg', name: 'Power BI' }
+const SALESFORCE = { src: '/icons/salesforce-generic.svg', name: 'Salesforce' }
 const N8N = { src: '/icons/ai/n8n.svg', name: 'n8n' }
-const ZAPIER = { src: '/icons/ai/zapier.svg', name: 'Zapier' }
-const DOCKER = { src: '/icons/ai/docker.svg', name: 'Docker' }
+const APPSSCRIPT = { src: '/icons/appsscript.svg', name: 'Apps Script' }
+const POWERQUERY = { src: '/icons/powerquery-generic.svg', name: 'Power Query' }
 const CLAUDE = { src: '/icons/ai/claude-color.svg', name: 'Claude' }
-const CODEX = { src: '/icons/ai/codex.svg', name: 'Codex' }
-const GLM = { src: '/icons/ai/zhipu.svg', name: 'GLM' }
-const QWEN = { src: '/icons/ai/qwen.svg', name: 'Qwen' }
-const HERMES = { src: '/icons/ai/hermes.svg', name: 'Hermes' }
-const NAMECHEAP = { src: '/icons/ai/namecheap.svg', name: 'Namecheap' }
-const CLOUDFLARE = { src: '/icons/ai/cloudflare.svg', name: 'Cloudflare' }
-const GITHUB = { src: '/icons/ai/github.svg', name: 'GitHub' }
-const GWS = { src: '/icons/googleworkspace.svg', name: 'Google Workspace' }
-const SLACK = { src: '/icons/ai/slack-color.svg', name: 'Slack' }
-const FIREFLIES = { src: '/icons/ai/fireflies.png', name: 'Fireflies' }
+const GEMINI = { src: '/icons/gemini.svg', name: 'Gemini' }
+const LSS = { src: '/icons/lss-generic.svg', name: 'Lean Six Sigma' }
 
 type Capability = {
   index: string
@@ -35,26 +35,23 @@ type Capability = {
   marks: { src: string; name: string }[]
 }
 
+// 👈 v4 had exactly 3 of these (BI Developer / Automation Specialist / AI-Enabled LSS
+// Practitioner) — the template's 4th slot is dropped rather than invented.
 const CAPABILITIES: Capability[] = [
   {
     index: '01',
-    title: 'Your role 1',
-    marks: [N8N, ZAPIER, DOCKER],
+    title: 'BI Developer',
+    marks: [TABLEAU, POWERBI, SALESFORCE],
   },
   {
     index: '02',
-    title: 'Your role 2',
-    marks: [CLAUDE, CODEX, GLM, QWEN, HERMES],
+    title: 'Automation Specialist',
+    marks: [N8N, APPSSCRIPT, POWERQUERY],
   },
   {
     index: '03',
-    title: 'Your role 3',
-    marks: [CLAUDE, CODEX, NAMECHEAP, CLOUDFLARE, GITHUB],
-  },
-  {
-    index: '04',
-    title: 'Your role 4',
-    marks: [GWS, SLACK, FIREFLIES],
+    title: 'AI-Enabled LSS Practitioner',
+    marks: [CLAUDE, GEMINI, LSS],
   },
 ]
 
@@ -67,24 +64,21 @@ export default function AboutGrid() {
           {`Hi, I’m ${profile.firstName}.`}
         </h1>
         <p className="pgrid__lede">
-          PLACEHOLDER - tell me what to put here: one line on what you do.
+          I find what's broken before it breaks everyone else's day.
         </p>
       </header>
 
       <div className="home__glass agrid__glass">
         <div className="agrid__copy">
           <p className="agrid__lead">
-            Your big statement goes here, in one or two lines.
-            <span> A softer second half that finishes the thought.</span>
+            I came up through the phones.
+            <span> That's where I learned that bad data costs more than no data. Everything I've built since has been an attempt to fix that.</span>
           </p>
 
           <p className="agrid__note">
-            <strong>Your company name</strong>, and{' '}
-            <a className="agrid__link" href="#">
-              your product
-            </a>{' '}
-            - PLACEHOLDER - tell me what to put here: two sentences on your company, what
-            you sell or build, and who it is for.
+            Data work taught me that the number everyone trusts is often the number nobody
+            questions. I'm the one who checks it — then builds something so it doesn't need
+            checking again.
           </p>
 
           <ul className="agrid__caps" role="list">
@@ -113,11 +107,11 @@ export default function AboutGrid() {
           <div className="agrid__bar">
             <span className="agrid__cell">
               <span className="agrid__cell-mark agrid__cell-mark--img">
-                <img src="/placeholders/badge.svg" alt="" loading="lazy" decoding="async" />
+                <img src="/icons/lss-generic.svg" alt="" loading="lazy" decoding="async" />
               </span>
               <span className="agrid__cell-copy">
-                <span className="agrid__cell-title">Credential name</span>
-                <span className="agrid__cell-meta">Credential ID</span>
+                <span className="agrid__cell-title">Lean Six Sigma Green Belt</span>
+                <span className="agrid__cell-meta">PLACEHOLDER - credential ID</span>
               </span>
             </span>
 
@@ -131,6 +125,8 @@ export default function AboutGrid() {
               </span>
             </span>
 
+            {/* PLACEHOLDER - no v4 equivalent for a community/affiliation link; left as the
+                template's own placeholder rather than inventing one. */}
             <a className="agrid__cell agrid__cell--wide" href="#">
               <span className="agrid__cell-mark agrid__cell-mark--plain">
                 <img src="/placeholders/logo.svg" alt="" loading="lazy" decoding="async" />
@@ -146,12 +142,12 @@ export default function AboutGrid() {
 
         <div className="agrid__portrait">
           <img
-            src="/avatar.svg"
-            alt="Portrait placeholder"
+            src="/site-photos/about-illustration.png"
+            alt="Illustration of Glenn at a laptop surrounded by dashboards, charts and AI panels"
             loading="eager"
             decoding="async"
-            width={400}
-            height={400}
+            width={1200}
+            height={896}
           />
         </div>
       </div>
