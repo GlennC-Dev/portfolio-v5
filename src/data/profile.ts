@@ -43,26 +43,26 @@ export type Profile = {
 }
 
 export const profile: Profile = {
-  name: 'Your Name',
-  firstName: 'Your Name',
+  name: 'Glenn Charifa',
+  firstName: 'Glenn',
   handle: '@yourhandle',
-  role: 'PLACEHOLDER - your title',
-  avatarSrc: '/avatar.svg',
+  role: 'Data and Automation',
+  avatarSrc: '/site-photos/avatar.png',
   verifiedLabel: 'PLACEHOLDER - what the tick means (e.g. a certification)',
   email: 'you@example.com',
-  location: 'PLACEHOLDER - your city or timezone',
+  location: 'Manila, Philippines (GMT+8)',
   stats: [
-    { value: '0 yrs', label: 'PLACEHOLDER' },
-    { value: '#000', label: 'PLACEHOLDER' },
-    { value: 'GMT+0', label: 'PLACEHOLDER' },
+    { value: '12 Yrs', label: 'In Ops' },
+    { value: 'LSSGB', label: 'Certified' },
+    { value: 'GMT+8', label: 'Manila' },
   ],
   // The intro types this line, then flies it into the Home headline.
   // Keep it short: two halves, 5-8 words total.
-  displayName: { line1: 'Your headline here.', line2: 'Keep it short.' },
+  displayName: { line1: 'Automate the Build.', line2: 'Trust the Output.' },
   hero: {
-    body: 'PLACEHOLDER - one line on what you do and who you do it for.',
-    portraitSrc: '/avatar.svg',
-    portraitAlt: 'Portrait placeholder',
+    body: 'I design the systems that turn messy processes into pipelines — then make sure what comes out the other end is actually right.',
+    portraitSrc: '/site-photos/avatar.png',
+    portraitAlt: 'Glenn Charifa',
   },
   socials: [
     { label: 'Facebook profile', href: '#', iconPath: '/icons/facebook.svg' },
