@@ -14,7 +14,6 @@
   .sgrid .pgrid__lede { font-size: clamp(13px, 0.9vw, 16px); }
   .sgrid { height: auto; }
   .sgrid__glass { height: auto; grid-template-rows: auto auto auto; }
-  .sgrid__flow-main { height: clamp(380px, 50vh, 540px); }
 }
 /* The bands need more air than the Home sheet's default gap - each one is
    its own object (a dark plate, a card row, a window) and at the default
@@ -281,70 +280,123 @@
 }
 .sgrid__bullet svg { flex: none; margin-top: 2px; color: var(--orange); }
 
-/* ---------- The workflow ---------- */
-.sgrid__flow {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(12px, 1.6vh, 18px);
-  min-height: 0;
-  min-width: 0;
-}
-/* Centred, with the tool chips on their own row underneath - the earlier
-   copy-left / chips-right split made the band read as two unrelated things. */
-.sgrid__flow-head {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 12px;
-  padding: 0 4px;
-}
-.sgrid__flow-copy { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
-.sgrid__flow-main { display: flex; min-height: 0; min-width: 0; }
-.sgrid__flow .autopilot--compact { flex: 1 1 auto; display: flex; flex-direction: column; }
-.sgrid__flow .autopilot--compact .autopilot__caption,
-.sgrid__flow .autopilot--compact .autopilot__tools { display: none; }
-.sgrid__flow-eyebrow {
+/* ---------- The experience ---------- */
+.sgrid__exp { display: flex; flex-direction: column; gap: clamp(14px, 2vh, 22px); min-width: 0; }
+.sgrid__exp-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+.sgrid__exp-eyebrow {
   font-size: var(--fs-eyebrow);
   font-weight: 600;
   letter-spacing: var(--ls-eyebrow);
   text-transform: uppercase;
   color: var(--orange-ink);
 }
-.sgrid__flow-title {
+.sgrid__exp-title {
   font-size: clamp(20px, 1.5vw, 28px);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.15;
   color: var(--navy);
 }
-.sgrid__flow-sub {
-  max-width: 60ch;
-  font-size: clamp(13px, 0.85vw, 15px);
-  line-height: 1.5;
+/* The timeline: one hairline down the left, a dot on every role. */
+.sgrid__exp-timeline {
+  position: relative;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding-left: 28px;
+  min-width: 0;
+}
+.sgrid__exp-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 0;
+  width: 1px;
+  background: var(--line);
+}
+.sgrid__exp-item {
+  position: relative;
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+.sgrid__exp-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
+.sgrid__exp-item::before {
+  content: '';
+  position: absolute;
+  left: -33px;
+  top: 7px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.18);
+}
+.sgrid__exp-item--earlier::before { background: var(--muted); box-shadow: 0 0 0 3px rgba(11, 30, 63, 0.08); }
+.sgrid__exp-role-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.sgrid__exp-role {
+  font-size: clamp(15px, 1.05vw, 18px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+}
+.sgrid__exp-period {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   color: var(--muted);
 }
-.sgrid__flow-tools {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  padding-left: 0;
-  list-style: none;
+.sgrid__exp-company {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(12.5px, 0.85vw, 14px);
+  font-weight: 600;
+  color: var(--orange-ink);
 }
-.sgrid__flow-tool {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
-  border-radius: var(--radius-pill);
-  font-size: 12px;
-  font-weight: 500;
+.sgrid__exp-bullets { display: flex; flex-direction: column; gap: 8px; list-style: none; margin: 12px 0 0; padding: 0; }
+.sgrid__exp-bullet {
+  position: relative;
+  padding-left: 20px;
+  font-size: clamp(12.5px, 0.85vw, 14.5px);
+  line-height: 1.6;
   color: var(--navy);
-  background: var(--paper);
-  box-shadow: inset 0 0 0 1px var(--line);
 }
-.sgrid__flow-tool svg { color: var(--orange); }
+.sgrid__exp-bullet::before { content: '\2192'; position: absolute; left: 0; color: var(--orange); }
+.sgrid__exp-bullet strong { font-weight: 700; }
+.sgrid__exp-earlier-label {
+  margin: 0 0 18px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sgrid__exp-toggle {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.sgrid__exp-toggle:hover .sgrid__exp-role { color: var(--orange-ink); }
+.sgrid__exp-toggle:focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; border-radius: 6px; }
+.sgrid__exp-toggle > span { min-width: 0; flex: 1 1 auto; }
+.sgrid__exp-caret { flex: none; margin-top: 4px; color: var(--muted); transition: transform 0.2s; }
+.sgrid__exp-caret.is-open { transform: rotate(180deg); }
 
 /* ---------- Below the shell ---------- */
 @media (max-width: 1099px) {
@@ -363,6 +415,7 @@
 @media (prefers-reduced-motion: reduce) {
   .sgrid__stage + .sgrid__stage::after { animation: none; opacity: 1; transform: translateX(12px); }
   .sgrid__stage-icon { animation: none; }
+  .sgrid__exp-caret { transition: none; }
 }
 
 /* Phone type floor. */

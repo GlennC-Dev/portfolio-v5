@@ -1,15 +1,15 @@
 import type { CSSProperties } from 'react'
 import { MagnifyingGlass, Wrench, Lightning, CheckCircle } from '@/components/slab'
 import type { Icon } from '@/components/slab'
-import Autopilot, { TOOLS } from '@/components/Autopilot'
+import ExperienceTimeline from '@/components/ExperienceTimeline'
 
 /**
  * ServicesGrid - the Services view on one glass sheet.
  *
  * Three bands, top to bottom: your three-step method (on a dark plate so it
  * is the first thing the eye lands on), the five services as cards that carry
- * the marks of what each one is built with, and the live automation demo
- * scaled into whatever height is left. Same object language as Home and
+ * the marks of what each one is built with, and the work history
+ * timeline below. Same object language as Home and
  * Projects: the glass, the bento card, plated marks, orange for the index
  * and the accent.
  *
@@ -189,30 +189,8 @@ export default function ServicesGrid() {
           </ul>
         </div>
 
-        {/* The live workflow. Its caption and the tool chips sit in a header
-            above the window, so the canvas gets the whole glass width. */}
-        <div className="sgrid__flow">
-          <header className="sgrid__flow-head">
-            <div className="sgrid__flow-copy">
-              <span className="sgrid__flow-eyebrow">Live automation</span>
-              <h2 className="sgrid__flow-title">Your automation headline.</h2>
-              <p className="sgrid__flow-sub">
-                PLACEHOLDER - tell me what to put here: one sentence on what this example automation does for a client.
-              </p>
-            </div>
-            <ul className="sgrid__flow-tools" role="list" aria-label="Tools that power this flow">
-              {TOOLS.map(({ Icon: ToolIcon, label }) => (
-                <li key={label} className="sgrid__flow-tool">
-                  <ToolIcon size={14} weight="duotone" aria-hidden="true" />
-                  <span>{label}</span>
-                </li>
-              ))}
-            </ul>
-          </header>
-          <div className="sgrid__flow-main">
-            <Autopilot compact maxScale={1.08} />
-          </div>
-        </div>
+        {/* The work history, in place of the old live-automation demo. */}
+        <ExperienceTimeline />
       </div>
     </section>
   )
