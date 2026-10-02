@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { MagnetStraight, Timer, Trophy, CheckCircle } from '@/components/slab'
+import { MagnifyingGlass, Wrench, Lightning, CheckCircle } from '@/components/slab'
 import type { Icon } from '@/components/slab'
 import Autopilot, { TOOLS } from '@/components/Autopilot'
 
@@ -30,24 +30,24 @@ type Stage = {
 const STAGES: Stage[] = [
   {
     index: '01',
-    label: 'Step 1',
-    body: 'PLACEHOLDER - one line on what happens in this step.',
-    Icon: MagnetStraight,
-    chips: ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4'],
+    label: 'Probe',
+    body: "Understand the actual problem — not the one described, the real one. Requirements don't always say what they mean. I ask until they do.",
+    Icon: MagnifyingGlass,
+    chips: ['Requirements', 'Stakeholder Interviews'],
   },
   {
     index: '02',
-    label: 'Step 2',
-    body: 'PLACEHOLDER - one line on what happens in this step.',
-    Icon: Timer,
-    chips: ['Tag 1', 'Tag 2', 'Tag 3'],
+    label: 'Build',
+    body: 'Design the system that solves it. Not the most complex one. The right one — reliable, maintainable, and built to last past the first week.',
+    Icon: Wrench,
+    chips: ['Systems Design', 'Maintainability'],
   },
   {
     index: '03',
-    label: 'Step 3',
-    body: 'PLACEHOLDER - one line on the result the client gets.',
-    Icon: Trophy,
-    chips: ['Tag 1', 'Tag 2', 'Tag 3'],
+    label: 'Automate',
+    body: "Make it run itself. If someone still has to touch it every day, the job isn't done.",
+    Icon: Lightning,
+    chips: ['Scripting', 'Triggers'],
   },
 ]
 
@@ -155,14 +155,12 @@ export default function ServicesGrid() {
             in order on the right with a signal running them. */}
         <div className="sgrid__method" aria-labelledby="method-title">
           <div className="sgrid__method-copy">
-            <span className="sgrid__method-eyebrow">Your Method</span>
+            <span className="sgrid__method-eyebrow">The Approach</span>
             <h2 className="sgrid__method-title" id="method-title">
-              One. Two. Three.
-              <br />
-              <span>Your method, in three steps.</span>
+              Probe. Build. Automate.
             </h2>
             <p className="sgrid__method-sub">
-              PLACEHOLDER - one sentence on why your method works.
+              A well-built system solves one problem — everything else stems from getting that one right.
             </p>
           </div>
 
