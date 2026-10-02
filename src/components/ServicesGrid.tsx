@@ -141,12 +141,12 @@ export default function ServicesGrid() {
   return (
     <section className="pgrid sgrid" aria-labelledby="services-title">
       <header className="pgrid__head">
-        <span className="pgrid__eyebrow">Services</span>
+        <span className="pgrid__eyebrow">Skills &amp; Capabilities</span>
         <h1 className="pgrid__title" id="services-title">
-          Your services headline, in one short line.
+          What I bring. <em>How</em> I&apos;ve applied it.
         </h1>
         <p className="pgrid__lede">
-          PLACEHOLDER - tell me what to put here: one line on what you offer.
+          Backed by years of actually being the one who had to fix things by hand.
         </p>
       </header>
 
