@@ -8,17 +8,17 @@ import {
   Medal,
   Stack,
   Quotes,
-  FunnelSimple,
+  ChartBar,
   Gear,
-  AddressBook,
-  Globe,
-  AppWindow,
+  Sparkle,
+  ArrowsClockwise,
   SealCheck,
 } from '@/components/slab'
 import { gymFunnel, bookingFunnel, websiteFunnel, type Funnel } from '@/data/funnels'
 import { aiStack, type StackNode } from '@/data/ai-stack'
 import { profile } from '@/data/profile'
 import { isHiddenView } from '@/data/hiddenViews'
+import { CAPABILITIES } from '@/data/capabilities'
 
 /**
  * Home's showcase: one card per rail view, each an index of what that view
@@ -35,13 +35,9 @@ const thumbSrc = (f: Funnel) =>
 
 const PROJECT_SHOTS = [gymFunnel[0], bookingFunnel[0], websiteFunnel[0], gymFunnel[1]].filter(Boolean)
 
-const OFFERS = [
-  { Icon: FunnelSimple, title: 'Service One', note: 'PLACEHOLDER one-liner' },
-  { Icon: Gear, title: 'Service Two', note: 'PLACEHOLDER one-liner' },
-  { Icon: AddressBook, title: 'Service Three', note: 'PLACEHOLDER one-liner' },
-  { Icon: Globe, title: 'Service Four', note: 'PLACEHOLDER one-liner' },
-  { Icon: AppWindow, title: 'Service Five', note: 'PLACEHOLDER one-liner' },
-] as const
+// The four capabilities (data/capabilities.ts), each with its own icon.
+const CAPABILITY_ICONS = [ChartBar, Gear, Sparkle, ArrowsClockwise] as const
+
 
 const CLIENTS = [
   { name: 'Client Name 1', role: 'PLACEHOLDER - your role for them', work: 'Tag · Tag · Tag', logo: '/placeholders/logo.svg' },
@@ -147,24 +143,27 @@ export default function HomeBento() {
         </div>
       </Link>
 
-      {/* Services: the five offers as a compact index. */}
+      {/* Skills & Experience: the four capabilities as a compact index. */}
       <Link to="/services" className="bento__card bento__card--services">
-        <CardHead Icon={Stack} title="Services" desc="PLACEHOLDER - what you offer, and to whom." />
+        <CardHead Icon={Stack} title="Skills & Experience" desc="Backed by years of actually being the one who had to fix things by hand." />
         <ul className="bento__media bento__offers" role="list">
-          {OFFERS.map(({ Icon, title, note }, i) => (
+          {CAPABILITIES.map(({ title, description }, i) => {
+            const Icon = CAPABILITY_ICONS[i]
+            return (
             <li key={title} className="bento__offer" style={{ '--i': i } as React.CSSProperties}>
               <span className="bento__offer-tile">
                 <Icon size={15} weight="duotone" aria-hidden="true" />
               </span>
               <span className="bento__offer-text">
                 <span className="bento__offer-title">{title}</span>
-                <span className="bento__offer-note">{note}</span>
+                <span className="bento__offer-note">{description}</span>
               </span>
               <span className="bento__offer-num" aria-hidden="true">
                 0{i + 1}
               </span>
             </li>
-          ))}
+            )
+          })}
         </ul>
       </Link>
 
