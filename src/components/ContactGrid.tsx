@@ -60,10 +60,11 @@ export default function ContactGrid() {
       <header className="pgrid__head">
         <span className="pgrid__eyebrow">FAQs / Contact</span>
         <h1 className="pgrid__title" id="contact-title">
-          Your contact headline goes here.
+          Tell me what's wrong. I'll ask the rest.
         </h1>
         <p className="pgrid__lede">
-          PLACEHOLDER - tell me what to put here: one or two lines inviting people to write and saying what they get back.
+          If something's breaking your day, let's talk about it. The right solution starts
+          with the right questions.
         </p>
       </header>
 
@@ -152,16 +153,10 @@ export default function ContactGrid() {
                 aria-hidden="true"
                 className="cgrid__trap"
               />
-              <div className="cgrid__row">
-                <label className="cgrid__field">
-                  <span className="cgrid__label">First name</span>
-                  <input type="text" name="firstName" autoComplete="given-name" required maxLength={MAX_NAME} placeholder="First name" />
-                </label>
-                <label className="cgrid__field">
-                  <span className="cgrid__label">Last name</span>
-                  <input type="text" name="lastName" autoComplete="family-name" required maxLength={MAX_NAME} placeholder="Last name" />
-                </label>
-              </div>
+              <label className="cgrid__field">
+                <span className="cgrid__label">Your Name</span>
+                <input type="text" name="name" autoComplete="name" required maxLength={MAX_NAME} placeholder="Your name" />
+              </label>
 
               <label className="cgrid__field">
                 <span className="cgrid__label">Email</span>
@@ -169,12 +164,12 @@ export default function ContactGrid() {
               </label>
 
               <label className="cgrid__field cgrid__field--grow">
-                <span className="cgrid__label">Tell me more about your business</span>
+                <span className="cgrid__label">Tell Me More About Your Business</span>
                 <textarea
                   name="message"
                   required
                   maxLength={MAX_MESSAGE}
-                  placeholder="What do you need help with? What are you working with today?"
+                  placeholder="What is the bottleneck? Where do leads stop? What are you running it on?"
                 />
               </label>
 
@@ -188,7 +183,7 @@ export default function ContactGrid() {
                   <span className="cgrid__submit-plane" aria-hidden="true">
                     <PaperPlaneTilt size={17} weight="fill" />
                   </span>
-                  <span className="cgrid__submit-label">{busy ? 'Sending' : 'Send message'}</span>
+                  <span className="cgrid__submit-label">{busy ? 'Sending' : 'Submit'}</span>
                   <ArrowUpRight className="cgrid__submit-arrow" size={15} weight="bold" aria-hidden="true" />
                 </button>
                 {status.kind === 'error' ? (
@@ -197,7 +192,7 @@ export default function ContactGrid() {
                     {status.note}
                   </span>
                 ) : (
-                  <span className="cgrid__hint">Short reassurance line, e.g. your reply time.</span>
+                  <span className="cgrid__hint">One business day. No newsletter, no drip.</span>
                 )}
               </div>
             </form>

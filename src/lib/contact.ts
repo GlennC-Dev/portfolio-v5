@@ -36,8 +36,7 @@ export function sanitize(input: string, allowNewlines = false): string {
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export type Lead = {
-  firstName: string
-  lastName: string
+  name: string
   email: string
   message: string
   /** Honeypot. Empty for a person; your backend should drop anything else. */
@@ -49,13 +48,12 @@ export type SubmitResult = { via: 'webhook' } | { via: 'mailto' }
 /** Read, trim, cap and sanitise the four fields. Returns null if a required
  *  field is missing or the email does not look like one. */
 export function readLead(data: FormData): Lead | null {
-  const firstName = sanitize(String(data.get('firstName') ?? '').trim()).slice(0, MAX_NAME)
-  const lastName = sanitize(String(data.get('lastName') ?? '').trim()).slice(0, MAX_NAME)
+  const name = sanitize(String(data.get('name') ?? '').trim()).slice(0, MAX_NAME)
   const email = sanitize(String(data.get('email') ?? '').trim()).slice(0, MAX_EMAIL)
   const message = sanitize(String(data.get('message') ?? '').trim(), true).slice(0, MAX_MESSAGE)
-  if (!firstName || !lastName || !email || !message || !EMAIL_RE.test(email)) return null
+  if (!name || !email || !message || !EMAIL_RE.test(email)) return null
   const website = String(data.get('website') ?? '')
-  return { firstName, lastName, email, message, website }
+  return { name, email, message, website }
 }
 
 export class SubmitError extends Error {}
@@ -74,8 +72,8 @@ export async function submitLead(lead: Lead): Promise<SubmitResult> {
     return { via: 'webhook' }
   }
 
-  const subject = `Project inquiry from ${lead.firstName} ${lead.lastName}`
-  const body = [`Name: ${lead.firstName} ${lead.lastName}`, `Email: ${lead.email}`, '', lead.message].join('\n')
+  const subject = `Project inquiry from ${lead.name}`
+  const body = [`Name: ${lead.name}`, `Email: ${lead.email}`, '', lead.message].join('\n')
   // encodeURIComponent on every value blocks header injection (CR/LF) and
   // parameter smuggling via & or ?.
   window.location.href = `mailto:${encodeURIComponent(RECIPIENT)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
