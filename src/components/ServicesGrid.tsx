@@ -53,87 +53,60 @@ const STAGES: Stage[] = [
 
 /* ---------- The services ---------- */
 
-// Example tool marks from /public/icons. Swap for the tools you actually use.
-const GHL = '/icons/gohighlevel.png'
-const REACT = '/icons/ai/react.svg'
-const TAILWIND = '/icons/ai/tailwindcss.svg'
-const VITE = '/icons/ai/vite.svg'
-const CLOUDFLARE = '/icons/ai/cloudflare.svg'
-const N8N = '/icons/ai/n8n.svg'
-const OPENAI = '/icons/openai.svg'
-const GWS = '/icons/googleworkspace.svg'
-const SLACK = '/icons/slack.svg'
-const CLAUDE_CODE = '/icons/claude-code-logo.png'
-const EXPO = '/icons/ai/expo.svg'
-const CHROME = '/icons/ai/googlechrome.svg'
-
 type Service = {
   index: string
   title: string
   description: string
   chip: string
-  logos: string[]
   bullets: string[]
 }
-
-const BULLETS = ['PLACEHOLDER benefit 1', 'PLACEHOLDER benefit 2', 'PLACEHOLDER benefit 3']
-const SERVICE_DESC = 'PLACEHOLDER - one line on this service.'
 
 const SERVICES: Service[] = [
   {
     index: '01',
-    title: 'Service One',
-    description: SERVICE_DESC,
-    chip: 'PLACEHOLDER',
-    logos: [GHL, REACT, TAILWIND],
-    bullets: BULLETS,
+    title: 'Business Intelligence',
+    description: 'The right number, in the right hands, without asking for it',
+    chip: 'Decisions that land',
+    bullets: [
+      'Dashboards built for the person acting on them',
+      'Multiple sources, one coherent view',
+      'Self-service — no manual pulls needed',
+    ],
   },
   {
     index: '02',
-    title: 'Service Two',
-    description: SERVICE_DESC,
-    chip: 'PLACEHOLDER',
-    logos: [GHL, N8N, OPENAI],
-    bullets: BULLETS,
+    title: 'Workflow Automation',
+    description: 'Built once. Runs forever.',
+    chip: 'Zero manual effort',
+    bullets: [
+      'Repetitive tasks replaced with pipelines',
+      'Systems that update and deliver on their own',
+      'Humans freed for work that actually needs them',
+    ],
   },
   {
     index: '03',
-    title: 'Service Three',
-    description: SERVICE_DESC,
-    chip: 'PLACEHOLDER',
-    logos: [GHL, GWS, SLACK],
-    bullets: BULLETS,
+    title: 'AI-Enabled Operations',
+    description: 'AI that works for you — not the other way around',
+    chip: 'Practical, not reckless',
+    bullets: [
+      'Get more from tools already in your stack',
+      'The right prompt beats the fanciest model',
+      'Adoption built on understanding, not hype',
+    ],
   },
   {
     index: '04',
-    title: 'Service Four',
-    description: SERVICE_DESC,
-    chip: 'PLACEHOLDER',
-    logos: [REACT, VITE, CLOUDFLARE],
-    bullets: BULLETS,
-  },
-  {
-    index: '05',
-    title: 'Service Five',
-    description: SERVICE_DESC,
-    chip: 'PLACEHOLDER',
-    logos: [CLAUDE_CODE, EXPO, CHROME],
-    bullets: BULLETS,
+    title: 'Process Improvement',
+    description: 'Fix the process, not just the symptom',
+    chip: 'Less waste, more output',
+    bullets: [
+      'Root cause first, solution second',
+      'LSS Green Belt-backed methodology',
+      'Improvements that hold past the first week',
+    ],
   },
 ]
-
-/** The tool marks, stacked horizontally on white tiles (same as Projects). */
-function Marks({ logos }: { logos: string[] }) {
-  return (
-    <span className="bento__logos" aria-hidden="true">
-      {logos.map((src) => (
-        <span key={src} className="bento__logo">
-          <img src={src} alt="" width={22} height={22} decoding="async" />
-        </span>
-      ))}
-    </span>
-  )
-}
 
 /* ---------- The page ---------- */
 
@@ -189,16 +162,15 @@ export default function ServicesGrid() {
         {/* Five cards, each carrying the marks of what it is built with. */}
         <div className="sgrid__offers">
           <div className="sgrid__offers-head">
-            <h2 className="sgrid__offers-title">Your services, listed.</h2>
-            <p className="sgrid__offers-sub">PLACEHOLDER - one short nudge.</p>
+            <h2 className="sgrid__offers-title">What I can do for you.</h2>
+            <p className="sgrid__offers-sub">Pick one, stack a few, or leave it to me.</p>
           </div>
           <ul className="bento sgrid__services" role="list">
             {SERVICES.map((s) => (
               <li key={s.title} className="bento__card sgrid__service">
                 <span className="bento__head">
                   <span className="sgrid__service-top">
-                    <Marks logos={s.logos} />
-                    <span className="sgrid__service-index" aria-hidden="true">{s.index} / 05</span>
+                    <span className="sgrid__service-index" aria-hidden="true">{s.index} / 04</span>
                   </span>
                   <span className="bento__title">{s.title}</span>
                   <span className="bento__desc">{s.description}</span>
