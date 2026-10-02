@@ -20,7 +20,7 @@ const TABS = [
   { label: 'Home', to: '/', Icon: House },
   { label: 'Work', to: '/projects', Icon: FolderOpen },
   { label: 'Contact', to: '/contact', Icon: Phone, primary: true },
-  { label: 'Services', to: '/services', Icon: Stack },
+  { label: 'Skills', to: '/services', Icon: Stack },
   { label: 'About', to: '/about', Icon: User },
 ] as const
 
