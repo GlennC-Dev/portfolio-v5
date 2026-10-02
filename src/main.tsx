@@ -42,6 +42,7 @@ import './styles/credentials.css'
 import './styles/testimonials.css'
 import './styles/mobile-app.css'
 import './styles/a11y.css'
+import './styles/chat.css'
 // Apple design pass - an overlay on everything above; perf.css still wins.
 import './styles/apple.css'
 // Last: the perf tiers only ever turn things OFF, so they must win.

@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState, useEffect, useRef } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import TabBar from '@/components/TabBar'
+import ChatWidget from '@/components/ChatWidget'
 import ThemeButton from '@/components/ThemeButton'
 import Rail from '@/components/Rail'
 import IntroOverlay from '@/components/IntroOverlay'
@@ -107,6 +108,7 @@ export default function App() {
         </main>
       </div>
       {phone && <TabBar />}
+      <ChatWidget phone={phone} />
       <AccessMenu />
     </>
   )

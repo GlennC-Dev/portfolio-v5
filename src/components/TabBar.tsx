@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import { openChat } from '@/lib/chatState'
 import { House, FolderOpen, Phone, EnvelopeSimple, ChatCircle, Stack, User } from '@/components/slab'
 
 /**
@@ -9,8 +10,8 @@ import { House, FolderOpen, Phone, EnvelopeSimple, ChatCircle, Stack, User } fro
  *
  * The middle slot is a Phone trigger rather than a direct link: tapping it
  * pops out two buttons - Message (goes to /contact, same destination the
- * old single icon linked to) and Chathead (reserved for a future chat
- * widget - no window wired up yet, this is just the open/close mechanics).
+ * old single icon linked to) and Chathead (closes the pop-out and opens the
+ * chat window - see ChatWidget).
  *
  * Only rendered below the shell breakpoint (App decides); from 1100px the
  * profile rail is the navigation.
@@ -72,7 +73,8 @@ export default function TabBar() {
                     className="tabbar__popbtn"
                     aria-label="Chat"
                     onClick={() => {
-                      // PLACEHOLDER - no chat window yet. Open/close mechanics only, per instruction.
+                      setOpen(false)
+                      openChat()
                     }}
                   >
                     <ChatCircle size={20} weight="bold" aria-hidden="true" />

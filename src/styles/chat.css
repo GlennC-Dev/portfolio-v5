@@ -1,0 +1,182 @@
+/* ============================================
+   CHAT - floating trigger (desktop) + window (all sizes)
+   v4's chat window in v5's tokens. Surfaces use --white / --paper / --line /
+   --navy so the dark theme resolves for free. Phone: no trigger, the window
+   sits just above the tab bar and opens from the Chathead button.
+   ============================================ */
+.chat__trigger {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  z-index: 720;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--orange);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(26, 98, 255, 0.4);
+  transition: transform 0.2s var(--ease-spring), background 0.2s;
+}
+.chat__trigger:hover { transform: scale(1.08); background: var(--orange-hover); }
+.chat__trigger:focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
+
+.chat__panel {
+  position: fixed;
+  right: 32px;
+  bottom: 104px;
+  z-index: 719;
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  max-width: calc(100vw - 2rem);
+  max-height: min(540px, calc(100dvh - 8rem));
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--navy);
+  box-shadow: 0 16px 64px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(16px) scale(0.97);
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.25s, transform 0.25s, visibility 0s linear 0.25s;
+}
+.chat__panel.is-open {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  visibility: visible;
+  transition: opacity 0.25s, transform 0.25s, visibility 0s;
+}
+
+.chat__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+  padding: 14px 16px;
+  background: var(--orange);
+  color: #fff;
+}
+.chat__avatar {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  background: rgba(255, 255, 255, 0.2);
+}
+.chat__who { flex: 1; min-width: 0; }
+.chat__name { font-size: 14px; font-weight: 600; }
+.chat__status { display: flex; align-items: center; gap: 6px; font-size: 12px; opacity: 0.85; }
+.chat__dot { width: 6px; height: 6px; border-radius: 50%; background: #6dffb0; }
+.chat__close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+}
+.chat__close:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+.chat__close:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }
+
+.chat__list {
+  flex: 1;
+  min-height: 160px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--paper);
+}
+.chat__msg { display: flex; flex-direction: column; gap: 4px; max-width: 82%; }
+.chat__msg--bot { align-self: flex-start; }
+.chat__msg--user { align-self: flex-end; }
+.chat__bubble {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.chat__msg--bot .chat__bubble {
+  background: var(--white);
+  border: 1px solid var(--line);
+  color: var(--navy);
+  border-bottom-left-radius: 3px;
+}
+.chat__msg--user .chat__bubble {
+  background: var(--orange);
+  color: #fff;
+  border-bottom-right-radius: 3px;
+}
+.chat__bubble--typing { animation: chat-pulse 1.4s ease-in-out infinite; }
+@keyframes chat-pulse { 50% { opacity: 0.5; } }
+.chat__time { font-size: 11px; color: var(--muted); }
+.chat__msg--user .chat__time { text-align: right; }
+
+.chat__form {
+  display: flex;
+  gap: 8px;
+  flex: none;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--white);
+}
+.chat__input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--paper);
+  color: var(--navy);
+  font: inherit;
+  font-size: 13.5px;
+  outline: none;
+}
+.chat__input:focus { border-color: var(--orange); }
+.chat__send {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--orange);
+  color: #fff;
+  cursor: pointer;
+}
+.chat__send:hover { background: var(--orange-hover); }
+.chat__send:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+
+/* Phone: no trigger; the window floats just above the tab bar
+   (bar = 14px inset + 66px tall, plus a 12px gap). 16px inputs stop iOS
+   zooming the page on focus. */
+@media (max-width: 1099px) {
+  .chat__panel {
+    right: 14px;
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    width: min(360px, calc(100vw - 28px));
+    max-height: min(540px, calc(100dvh - 140px));
+  }
+  .chat__input { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chat__panel, .chat__panel.is-open, .chat__trigger { transition: none; }
+  .chat__bubble--typing { animation: none; }
+}
