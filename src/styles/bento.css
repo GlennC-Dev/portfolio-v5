@@ -22,6 +22,10 @@
   }
   .bento__card--projects { grid-column: span 2; }
   .bento__card--quotes   { grid-column: span 2; }
+  /* Testimonials hidden (data/hiddenViews.ts): the two cards left in row two
+     take the width it freed so the grid stays full. */
+  .bento--no-quotes .bento__card--creds,
+  .bento--no-quotes .bento__card--services { grid-column: span 2; }
 }
 
 .bento__card {

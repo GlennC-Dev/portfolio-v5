@@ -13,6 +13,7 @@ import {
 } from './RailIcons'
 import { getTheme, toggleTheme, type Theme } from '@/lib/theme'
 import { profile } from '@/data/profile'
+import { isHiddenView } from '@/data/hiddenViews'
 
 /**
  * The profile rail: the fixed left column of the shell. It carries identity,
@@ -97,7 +98,7 @@ export default function Rail() {
 
         <nav className="rail__nav" aria-label="Sections">
           <ul>
-            {RAIL_LINKS.map(({ label, to, Icon }) => (
+            {RAIL_LINKS.filter(({ to }) => !isHiddenView(to)).map(({ label, to, Icon }) => (
               <li key={to}>
                 <NavLink to={to} end={to === '/'} className="rail__link">
                   <Icon size={21} />

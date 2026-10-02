@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { SealCheck, ArrowUpRight, Play, Stack, Coffee } from '@/components/slab'
 import { profile } from '@/data/profile'
+import { isHiddenView } from '@/data/hiddenViews'
 import ThemeButton from './ThemeButton'
 
 /**
@@ -52,6 +53,9 @@ const TILES = [
   { n: '05', label: 'About', to: '/about', title: `Hi, I'm ${profile.firstName}.`, desc: 'PLACEHOLDER - one line about you.', img: profile.avatarSrc },
 ] as const
 
+// Numbers follow what is actually shown, so hiding a tile never leaves a gap (01, 02, 05).
+const VISIBLE_TILES = TILES.filter((t) => !isHiddenView(t.to))
+
 export function HomeExplore() {
   return (
     <>
@@ -60,10 +64,10 @@ export function HomeExplore() {
         <span className="hsec__aside">Swipe</span>
       </div>
       <ul className="htiles" role="list">
-        {TILES.map((t) => (
+        {VISIBLE_TILES.map((t, i) => (
           <li key={t.to}>
             <Link to={t.to} className={`htile${'dark' in t && t.dark ? ' htile--dark' : ''}${'accent' in t && t.accent ? ' htile--accent' : ''}`}>
-              <span className="htile__n">{t.n} {t.label}</span>
+              <span className="htile__n">{String(i + 1).padStart(2, '0')} {t.label}</span>
               {'img' in t ? (
                 <img className="htile__img" src={t.img} alt="" loading="lazy" />
               ) : (
@@ -79,6 +83,8 @@ export function HomeExplore() {
         ))}
       </ul>
 
+      {!isHiddenView('/testimonials') && (
+        <>
       <div className="hsec">
         <h2 className="hsec__title">What clients say</h2>
         <Link to="/testimonials" className="hsec__aside">See all</Link>
@@ -94,6 +100,8 @@ export function HomeExplore() {
           <span className="hproof__meta">PLACEHOLDER - client role</span>
         </span>
       </Link>
+        </>
+      )}
     </>
   )
 }

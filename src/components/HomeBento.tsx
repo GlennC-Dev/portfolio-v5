@@ -18,6 +18,7 @@ import {
 import { gymFunnel, bookingFunnel, websiteFunnel, type Funnel } from '@/data/funnels'
 import { aiStack, type StackNode } from '@/data/ai-stack'
 import { profile } from '@/data/profile'
+import { isHiddenView } from '@/data/hiddenViews'
 
 /**
  * Home's showcase: one card per rail view, each an index of what that view
@@ -80,11 +81,12 @@ function CardHead({
 }
 
 export default function HomeBento() {
+  const showQuotes = !isHiddenView('/testimonials')
   const half = Math.ceil(AI_BUILDS.length / 2)
   const toolRows = [AI_BUILDS.slice(0, half), AI_BUILDS.slice(half)]
 
   return (
-    <nav className="bento" aria-label="Explore the portfolio">
+    <nav className={`bento${showQuotes ? '' : ' bento--no-quotes'}`} aria-label="Explore the portfolio">
       {/* Projects: the funnel thumbnails drift upward on a looped track. */}
       <Link to="/projects" className="bento__card bento__card--projects">
         <CardHead Icon={FolderOpen} title="Projects" desc="PLACEHOLDER - one line on what your projects are." />
@@ -167,6 +169,7 @@ export default function HomeBento() {
       </Link>
 
       {/* Testimonials: client cards drifting up a clipped column. */}
+      {showQuotes && (
       <Link to="/testimonials" className="bento__card bento__card--quotes">
         <CardHead Icon={Quotes} title="Testimonials" desc="PLACEHOLDER - one line on your clients." />
         <div className="bento__media bento__reviews" aria-hidden="true">
@@ -188,6 +191,7 @@ export default function HomeBento() {
           </div>
         </div>
       </Link>
+      )}
     </nav>
   )
 }
