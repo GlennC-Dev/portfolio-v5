@@ -1,10 +1,10 @@
 import { Fragment, useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { ArrowUpRight, X, Ticket, Robot, FlowArrow, CursorClick, ChartBar } from '@/components/slab'
-import { FlowIcon, PlanIcon, SparkIcon, DeviceIcon } from './ProjectIcons'
-import { AutomationsPanel, PlanPanel, TicketingPanel, FrameworkPanel, WorkflowPanel, BarrelPanel, AIWindow, AppsWindow } from './ProjectPanels'
+import { ArrowUpRight, X, Ticket, Robot, FlowArrow, CursorClick, ChartBar, FileText } from '@/components/slab'
+import { FlowIcon, PlanIcon, SparkIcon } from './ProjectIcons'
+import { AutomationsPanel, PlanPanel, TicketingPanel, FrameworkPanel, WorkflowPanel, BarrelPanel, AIWindow, WritingWindow } from './ProjectPanels'
 import { DASHBOARDS } from '@/data/dataviz'
-import { mobileApps } from '@/data/projects'
+import { WRITING } from '@/data/writing'
 import { aiStack, type StackNode } from '@/data/ai-stack'
 import { useIsPhone } from '@/hooks/useMediaQuery'
 
@@ -35,12 +35,12 @@ type Project = {
   cat: Cat
 }
 
-type Cat = 'work' | 'dataviz' | 'apps' | 'ai'
+type Cat = 'work' | 'dataviz' | 'writing' | 'ai'
 const FILTERS: { key: Cat | 'all'; label: string }[] = [
   { key: 'all', label: 'All' },
   { key: 'work', label: 'Work' },
   { key: 'dataviz', label: 'Data Viz' },
-  { key: 'apps', label: 'Apps' },
+  { key: 'writing', label: 'Writing' },
   { key: 'ai', label: 'AI' },
 ]
 
@@ -49,9 +49,6 @@ const GHL = '/icons/gohighlevel.png'
 const CLAUDE_CODE = '/icons/claude-code-logo.png'
 const CODEX = '/icons/ai/codex.svg'
 const HERMES = '/icons/ai/hermes.svg'
-const PLAY = '/icons/ai/googleplay.svg'
-const CHROME = '/icons/ai/googlechrome.svg'
-const EXPO = '/icons/ai/expo.svg'
 
 const WF_SHOTS = ['project-1.jpg', 'project-2.jpg', 'project-3.jpg', 'project-4.jpg'].map(
   (f) => `/placeholders/${f}`,
@@ -60,11 +57,8 @@ const WF_SHOTS = ['project-1.jpg', 'project-2.jpg', 'project-3.jpg', 'project-4.
 // The card's fan: the first dashboard of the first three workbooks.
 const FUNNEL_SHOTS = DASHBOARDS.filter((d) => d.index === 0).slice(0, 3)
 
-const APP_SHOTS = [
-  ...mobileApps.map((a) => a.imageSrc).filter((s): s is string => !!s),
-  '/placeholders/extension-1.jpg',
-  '/placeholders/extension-2.jpg',
-]
+// The Technical Writing card's reel: each document's cover.
+const DOC_SHOTS = WRITING.map((w) => w.cover)
 
 const BUILD_DESC = 'PLACEHOLDER - tell me what to put here: two lines on what this project is and the result it got.'
 
@@ -147,11 +141,11 @@ function AIPreview() {
   )
 }
 
-function AppsPreview() {
+function WritingPreview() {
   return (
     <div className="bento__media bento__reel bento__reel--row" aria-hidden="true">
       <div className="bento__reel-track">
-        {[...APP_SHOTS, ...APP_SHOTS].map((src, i) => (
+        {[...DOC_SHOTS, ...DOC_SHOTS].map((src, i) => (
           <span key={i} className="bento__shot bento__shot--app">
             <img src={src} alt="" loading="lazy" decoding="async" />
           </span>
@@ -166,7 +160,7 @@ const PROJECTS: Project[] = [
   { id: 'plan', cat: 'work', index: '02', title: 'Sample Document', desc: 'PLACEHOLDER - tell me what to put here: the document this opens.', Icon: PlanIcon, logos: [GHL], eyebrow: 'Sample document', Section: PlanPanel, Preview: PlanPreview },
   { id: 'workflows', cat: 'work', index: '06', title: 'Project Title', desc: 'PLACEHOLDER - tell me what to put here: what these screens show.', Icon: FlowIcon, logos: [GHL], eyebrow: 'Screenshots', Section: AutomationsPanel, Preview: WorkflowsPreview },
   { id: 'ai', cat: 'ai', index: '07', title: 'Your systems title here', desc: 'PLACEHOLDER - tell me what to put here: the systems you run.', Icon: SparkIcon, logos: [CLAUDE_CODE, CODEX, HERMES], eyebrow: 'Your systems', Section: AIWindow, Preview: AIPreview },
-  { id: 'apps', cat: 'apps', index: '08', title: 'Apps and tools', desc: 'PLACEHOLDER - tell me what to put here: the apps and tools you ship.', Icon: DeviceIcon, logos: [PLAY, EXPO, CHROME], eyebrow: 'Your apps', Section: AppsWindow, span: 2, Preview: AppsPreview },
+  { id: 'writing', cat: 'writing', index: '08', title: 'Technical Writing', desc: 'Turning complex workflows into clear, actionable frameworks.', Icon: ({ size = 22 }) => <FileText size={size} weight="duotone" />, eyebrow: 'Technical Writing', Section: WritingWindow, span: 2, Preview: WritingPreview },
 ]
 
 /** The icon tile, or the real marks stacked horizontally in its place. */

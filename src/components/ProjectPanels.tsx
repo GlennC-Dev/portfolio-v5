@@ -3,7 +3,7 @@ import { Ticket, Robot, FlowArrow, type Icon } from '@/components/slab'
 import { lazy, Suspense } from 'react'
 import WorkflowSamples from './WorkflowSamples'
 import AIStackGrid from './AIStackGrid'
-import { AppsSection } from './Projects'
+import { WritingSection } from './WritingSection'
 import { useDashboardModal } from './DashboardModal'
 import { DASHBOARDS } from '@/data/dataviz'
 
@@ -66,10 +66,10 @@ export function AIWindow() {
     </SectionWindow>
   )
 }
-export function AppsWindow() {
+export function WritingWindow() {
   return (
-    <SectionWindow label="Your apps">
-      <AppsSection />
+    <SectionWindow label="Technical Writing">
+      <WritingSection />
     </SectionWindow>
   )
 }
