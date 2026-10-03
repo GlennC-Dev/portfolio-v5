@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { ArrowUpRight, X, Ticket, Robot, FlowArrow, CursorClick } from '@/components/slab'
-import { FlowIcon, PlanIcon, GlobeIcon, SparkIcon, DeviceIcon } from './ProjectIcons'
+import { ArrowUpRight, X, Ticket, Robot, FlowArrow, CursorClick, ChartBar } from '@/components/slab'
+import { FlowIcon, PlanIcon, SparkIcon, DeviceIcon } from './ProjectIcons'
 import { AutomationsPanel, PlanPanel, TicketingPanel, FrameworkPanel, WorkflowPanel, BarrelPanel, AIWindow, AppsWindow } from './ProjectPanels'
 import { gymFunnel, bookingFunnel, websiteFunnel, type Funnel } from '@/data/funnels'
 import { mobileApps } from '@/data/projects'
@@ -35,11 +35,11 @@ type Project = {
   cat: Cat
 }
 
-type Cat = 'work' | 'sites' | 'apps' | 'ai'
+type Cat = 'work' | 'dataviz' | 'apps' | 'ai'
 const FILTERS: { key: Cat | 'all'; label: string }[] = [
   { key: 'all', label: 'All' },
   { key: 'work', label: 'Work' },
-  { key: 'sites', label: 'Sites' },
+  { key: 'dataviz', label: 'Data Viz' },
   { key: 'apps', label: 'Apps' },
   { key: 'ai', label: 'AI' },
 ]
@@ -162,9 +162,9 @@ function AppsPreview() {
 }
 
 const PROJECTS: Project[] = [
-  { id: 'workflows', cat: 'work', index: '01', title: 'Project Title', desc: 'PLACEHOLDER - tell me what to put here: what these screens show.', Icon: FlowIcon, logos: [GHL], eyebrow: 'Screenshots', Section: AutomationsPanel, span: 2, Preview: WorkflowsPreview },
+  { id: 'funnels', cat: 'dataviz', index: '01', title: 'Data Visualizations', desc: 'Dashboards made for self-service consumption and automated delivery', Icon: ({ size = 22 }) => <ChartBar size={size} weight="duotone" />, eyebrow: 'Data Visualizations', Section: BarrelPanel, span: 2, Preview: FunnelsPreview },
   { id: 'plan', cat: 'work', index: '02', title: 'Sample Document', desc: 'PLACEHOLDER - tell me what to put here: the document this opens.', Icon: PlanIcon, logos: [GHL], eyebrow: 'Sample document', Section: PlanPanel, Preview: PlanPreview },
-  { id: 'funnels', cat: 'sites', index: '06', title: 'Pages and sites', desc: 'PLACEHOLDER - the pages in this reel. Spin the reel.', Icon: GlobeIcon, logos: [GHL], eyebrow: 'Pages and sites', Section: BarrelPanel, Preview: FunnelsPreview },
+  { id: 'workflows', cat: 'work', index: '06', title: 'Project Title', desc: 'PLACEHOLDER - tell me what to put here: what these screens show.', Icon: FlowIcon, logos: [GHL], eyebrow: 'Screenshots', Section: AutomationsPanel, Preview: WorkflowsPreview },
   { id: 'ai', cat: 'ai', index: '07', title: 'Your systems title here', desc: 'PLACEHOLDER - tell me what to put here: the systems you run.', Icon: SparkIcon, logos: [CLAUDE_CODE, CODEX, HERMES], eyebrow: 'Your systems', Section: AIWindow, Preview: AIPreview },
   { id: 'apps', cat: 'apps', index: '08', title: 'Apps and tools', desc: 'PLACEHOLDER - tell me what to put here: the apps and tools you ship.', Icon: DeviceIcon, logos: [PLAY, EXPO, CHROME], eyebrow: 'Your apps', Section: AppsWindow, span: 2, Preview: AppsPreview },
 ]
