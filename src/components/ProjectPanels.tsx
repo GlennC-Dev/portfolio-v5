@@ -1,9 +1,11 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { Ticket, Robot, FlowArrow, type Icon } from '@/components/slab'
+import { Ticket, Robot, FlowArrow, ArrowLeft, type Icon } from '@/components/slab'
 import { lazy, Suspense } from 'react'
-import WorkflowSamples from './WorkflowSamples'
 import AIStackGrid from './AIStackGrid'
 import { WritingSection } from './WritingSection'
+import { AppScriptShelf } from './AppScriptSection'
+import WorkflowSamples from './WorkflowSamples'
+import type { AppScriptProject } from '@/data/appscript'
 import { useDashboardModal } from './DashboardModal'
 import { DASHBOARDS } from '@/data/dataviz'
 
@@ -66,6 +68,45 @@ export function AIWindow() {
     </SectionWindow>
   )
 }
+/** Apps Script Reports: a shelf of projects; picking one swaps the dialog to
+ *  that project's drifting screenshot strip, with a way back to the shelf. */
+export function AppScriptWindow() {
+  const [selected, setSelected] = useState<AppScriptProject | null>(null)
+
+  if (!selected) {
+    return (
+      <SectionWindow label="Apps Script Reports">
+        <AppScriptShelf onSelect={setSelected} />
+      </SectionWindow>
+    )
+  }
+  return (
+    <div className="ppanel ppanel--strip ppanel--appscript">
+      <button type="button" className="appscript__back" onClick={() => setSelected(null)} autoFocus>
+        <ArrowLeft size={16} weight="bold" aria-hidden="true" />
+        All projects
+      </button>
+      <header className="appscript__head">
+        <h3 className="appscript__title">{selected.title}</h3>
+        <p className="appscript__desc">{selected.desc}</p>
+        <ul className="appscript__tags" role="list">
+          {selected.tags.map((t) => (
+            <li key={t} className="appscript__tag">
+              {t}
+            </li>
+          ))}
+        </ul>
+      </header>
+      <WorkflowSamples
+        key={selected.slug}
+        samples={selected.shots.map((x) => ({ src: x.src, label: x.caption }))}
+        caption={null}
+        fill={6}
+      />
+    </div>
+  )
+}
+
 export function WritingWindow() {
   return (
     <SectionWindow label="Technical Writing">

@@ -1,11 +1,11 @@
 import { Fragment, useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { ArrowUpRight, X, Ticket, Robot, FlowArrow, CursorClick, ChartBar, FileText } from '@/components/slab'
-import { FlowIcon, PlanIcon, SparkIcon } from './ProjectIcons'
-import { AutomationsPanel, PlanPanel, TicketingPanel, FrameworkPanel, WorkflowPanel, BarrelPanel, AIWindow, WritingWindow } from './ProjectPanels'
+import { ArrowUpRight, X, Ticket, Robot, FlowArrow, CursorClick, ChartBar, FileText, Table } from '@/components/slab'
+import { FlowIcon, PlanIcon } from './ProjectIcons'
+import { AutomationsPanel, PlanPanel, TicketingPanel, FrameworkPanel, WorkflowPanel, BarrelPanel, AppScriptWindow, WritingWindow } from './ProjectPanels'
 import { DASHBOARDS } from '@/data/dataviz'
 import { WRITING } from '@/data/writing'
-import { aiStack, type StackNode } from '@/data/ai-stack'
+import { APPSCRIPT } from '@/data/appscript'
 import { useIsPhone } from '@/hooks/useMediaQuery'
 
 /**
@@ -70,8 +70,8 @@ const BUILDS: Project[] = [
   { id: 'workflow', cat: 'ai', index: '05', kicker: 'Placeholder category', title: 'Featured Project Three', desc: BUILD_DESC, Icon: () => <FlowArrow size={20} weight="duotone" />, logos: [CLAUDE_CODE, CODEX, HERMES], eyebrow: 'Featured build', Section: WorkflowPanel, Preview: () => null },
 ]
 
-const leaves = (n: StackNode): StackNode[] => (n.children?.length ? n.children.flatMap(leaves) : [n])
-const AI_LEAVES = leaves(aiStack)
+// The Apps Script card's reel: each project's cover.
+const APPSCRIPT_SHOTS = APPSCRIPT.map((p) => p.shots[0].src)
 
 /* ---------- Previews ---------- */
 
@@ -120,23 +120,17 @@ function FunnelsPreview() {
   )
 }
 
-function AIPreview() {
-  const half = Math.ceil(AI_LEAVES.length / 2)
-  const rows = [AI_LEAVES.slice(0, half), AI_LEAVES.slice(half)]
+/** The Apps Script Reports card: a drifting reel of each project's cover. */
+function AppScriptPreview() {
   return (
-    <div className="bento__media bento__chips" aria-hidden="true">
-      {rows.map((row, r) => (
-        <div key={r} className="bento__chip-row" data-dir={r ? 'right' : 'left'}>
-          <div className="bento__chip-track">
-            {[...row, ...row].map((n, i) => (
-              <span key={`${n.id}-${i}`} className="bento__chip" data-status={n.status}>
-                <n.Icon size={15} weight="duotone" />
-                {n.name}
-              </span>
-            ))}
-          </div>
-        </div>
-      ))}
+    <div className="bento__media bento__reel" aria-hidden="true">
+      <div className="bento__reel-track">
+        {[...APPSCRIPT_SHOTS, ...APPSCRIPT_SHOTS].map((src, i) => (
+          <span key={i} className="bento__shot">
+            <img src={src} alt="" loading="lazy" decoding="async" />
+          </span>
+        ))}
+      </div>
     </div>
   )
 }
@@ -159,7 +153,7 @@ const PROJECTS: Project[] = [
   { id: 'funnels', cat: 'dataviz', index: '01', title: 'Data Visualizations', desc: 'Dashboards made for self-service consumption and automated delivery', Icon: ({ size = 22 }) => <ChartBar size={size} weight="duotone" />, eyebrow: 'Data Visualizations', Section: BarrelPanel, span: 2, Preview: FunnelsPreview },
   { id: 'plan', cat: 'work', index: '02', title: 'Sample Document', desc: 'PLACEHOLDER - tell me what to put here: the document this opens.', Icon: PlanIcon, logos: [GHL], eyebrow: 'Sample document', Section: PlanPanel, Preview: PlanPreview },
   { id: 'workflows', cat: 'work', index: '06', title: 'Project Title', desc: 'PLACEHOLDER - tell me what to put here: what these screens show.', Icon: FlowIcon, logos: [GHL], eyebrow: 'Screenshots', Section: AutomationsPanel, Preview: WorkflowsPreview },
-  { id: 'ai', cat: 'ai', index: '07', title: 'Your systems title here', desc: 'PLACEHOLDER - tell me what to put here: the systems you run.', Icon: SparkIcon, logos: [CLAUDE_CODE, CODEX, HERMES], eyebrow: 'Your systems', Section: AIWindow, Preview: AIPreview },
+  { id: 'appscript', cat: 'work', index: '07', title: 'Apps Script Reports', desc: 'Scripted reports, form maintenance, and internal tooling that replace recurring manual work.', Icon: ({ size = 22 }) => <Table size={size} weight="duotone" />, eyebrow: 'Apps Script Reports', Section: AppScriptWindow, Preview: AppScriptPreview },
   { id: 'writing', cat: 'writing', index: '08', title: 'Technical Writing', desc: 'Turning complex workflows into clear, actionable frameworks.', Icon: ({ size = 22 }) => <FileText size={size} weight="duotone" />, eyebrow: 'Technical Writing', Section: WritingWindow, span: 2, Preview: WritingPreview },
 ]
 

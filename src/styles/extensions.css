@@ -5887,7 +5887,8 @@ img.about__stat-badge {
 .wfs__modal {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  /* Above the Projects dialog (8000), which the strip now lives inside. */
+  z-index: 9000;
   display: flex;
   align-items: center;
   justify-content: center;
