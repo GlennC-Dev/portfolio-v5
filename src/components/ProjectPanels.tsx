@@ -6,6 +6,7 @@ import { WritingSection } from './WritingSection'
 import { AppScriptShelf } from './AppScriptSection'
 import WorkflowSamples from './WorkflowSamples'
 import type { AppScriptProject } from '@/data/appscript'
+import type { WritingItem } from '@/data/writing'
 import { useDashboardModal } from './DashboardModal'
 import { DASHBOARDS } from '@/data/dataviz'
 
@@ -68,12 +69,40 @@ export function AIWindow() {
     </SectionWindow>
   )
 }
-/** Apps Script Reports: a shelf of projects; picking one swaps the dialog to
- *  that project's drifting screenshot strip (screenshots only), with a way
+/** The strip view both shelves open: screenshots only, drifting, with a way
  *  back to the shelf. */
+function ScreenshotStrip({
+  slug,
+  shots,
+  fit,
+  onBack,
+}: {
+  slug: string
+  shots: { src: string; caption: string }[]
+  fit?: 'cover' | 'contain'
+  onBack: () => void
+}) {
+  return (
+    <div className="ppanel ppanel--strip ppanel--appscript">
+      <button type="button" className="appscript__back" onClick={onBack} autoFocus>
+        <ArrowLeft size={16} weight="bold" aria-hidden="true" />
+        All projects
+      </button>
+      <WorkflowSamples
+        key={slug}
+        samples={shots.map((x) => ({ src: x.src, label: x.caption }))}
+        caption={null}
+        fill={6}
+        fit={fit}
+      />
+    </div>
+  )
+}
+
+/** Apps Script Reports: a shelf of projects; picking one swaps the dialog to
+ *  that project's screenshot strip. */
 export function AppScriptWindow() {
   const [selected, setSelected] = useState<AppScriptProject | null>(null)
-
   if (!selected) {
     return (
       <SectionWindow label="Apps Script Reports">
@@ -81,28 +110,21 @@ export function AppScriptWindow() {
       </SectionWindow>
     )
   }
-  return (
-    <div className="ppanel ppanel--strip ppanel--appscript">
-      <button type="button" className="appscript__back" onClick={() => setSelected(null)} autoFocus>
-        <ArrowLeft size={16} weight="bold" aria-hidden="true" />
-        All projects
-      </button>
-      <WorkflowSamples
-        key={selected.slug}
-        samples={selected.shots.map((x) => ({ src: x.src, label: x.caption }))}
-        caption={null}
-        fill={6}
-      />
-    </div>
-  )
+  return <ScreenshotStrip slug={selected.slug} shots={selected.shots} onBack={() => setSelected(null)} />
 }
 
+/** Technical Writing: the same shelf-then-strip, with each page shown whole
+ *  (slides and diagrams are not cropped). */
 export function WritingWindow() {
-  return (
-    <SectionWindow label="Technical Writing">
-      <WritingSection />
-    </SectionWindow>
-  )
+  const [selected, setSelected] = useState<WritingItem | null>(null)
+  if (!selected) {
+    return (
+      <SectionWindow label="Technical Writing">
+        <WritingSection onSelect={setSelected} />
+      </SectionWindow>
+    )
+  }
+  return <ScreenshotStrip slug={selected.slug} shots={selected.shots} fit="contain" onBack={() => setSelected(null)} />
 }
 
 /** The plan document, full height, straight away. */

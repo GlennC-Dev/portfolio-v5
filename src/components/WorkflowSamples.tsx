@@ -36,9 +36,12 @@ type Props = {
   /** Minimum frames per half of the loop. A short list is repeated until a
    *  half is at least this long, so it still fills a wide screen. */
   fill?: number
+  /** 'cover' crops each frame to a fixed shape (screenshots of code);
+   *  'contain' shows the whole image (documents, slides, diagrams). */
+  fit?: 'cover' | 'contain'
 }
 
-export default function WorkflowSamples({ samples = DEFAULT_SAMPLES, caption = DEFAULT_CAPTION, fill = 0 }: Props) {
+export default function WorkflowSamples({ samples = DEFAULT_SAMPLES, caption = DEFAULT_CAPTION, fill = 0, fit = 'cover' }: Props) {
   const n = samples.length
   const reps = fill > 0 ? Math.max(1, Math.ceil(fill / n)) : 1
   const doubled = useMemo(() => {
@@ -103,7 +106,7 @@ export default function WorkflowSamples({ samples = DEFAULT_SAMPLES, caption = D
                   <span className="wfs__dot wfs__dot--g" />
                 </span>
                 <img
-                  className="wfs__img"
+                  className={fit === 'contain' ? 'wfs__img wfs__img--contain' : 'wfs__img'}
                   src={s.src}
                   alt={clone ? '' : `${s.label} screenshot`}
                   loading="lazy"

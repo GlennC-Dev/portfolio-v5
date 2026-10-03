@@ -58,7 +58,7 @@ const WF_SHOTS = ['project-1.jpg', 'project-2.jpg', 'project-3.jpg', 'project-4.
 const FUNNEL_SHOTS = DASHBOARDS.filter((d) => d.index === 0).slice(0, 3)
 
 // The Technical Writing card's reel: each document's cover.
-const DOC_SHOTS = WRITING.map((w) => w.cover)
+const DOC_SHOTS = WRITING.map((w) => w.shots[0].src)
 
 const BUILD_DESC = 'PLACEHOLDER - tell me what to put here: two lines on what this project is and the result it got.'
 
