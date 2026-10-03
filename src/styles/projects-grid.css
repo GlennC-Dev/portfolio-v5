@@ -552,3 +552,61 @@
   .bento__kicker { font-size: 10.5px; }
   .bento__build-desc { font-size: 12px; }
 }
+
+
+/* ==========================================================================
+   DATA VISUALIZATIONS VIEWER - frame + footer inside the funnel modal shell
+   ========================================================================== */
+.dvmodal__frame {
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
+  border: 0;
+  display: block;
+  background: #fff; /* matches /photo-frame.html */
+}
+.dvmodal__foot {
+  flex: none;
+  max-height: min(40vh, 300px);
+  overflow-y: auto;
+  padding: 14px 20px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--white);
+  color: var(--navy);
+}
+.dvmodal__row { display: flex; align-items: center; gap: 12px; }
+.dvmodal__titles { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.dvmodal__name { margin: 0; font-size: clamp(15px, 1.1vw, 18px); font-weight: 700; letter-spacing: -0.01em; }
+.dvmodal__count { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--muted); }
+.dvmodal__step {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--navy);
+  cursor: pointer;
+}
+.dvmodal__step:hover { border-color: var(--orange); color: var(--orange-ink); }
+.dvmodal__step:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+.dvmodal__desc { margin: 8px 0 0; font-size: 13.5px; line-height: 1.55; color: var(--navy); }
+.dvmodal__wb { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+.dvmodal__wb > summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  cursor: pointer;
+  list-style: none;
+}
+.dvmodal__wb > summary::-webkit-details-marker { display: none; }
+.dvmodal__wb > summary::after { content: '+'; margin-left: auto; color: var(--muted); font-weight: 700; }
+.dvmodal__wb[open] > summary::after { content: '\2212'; }
+.dvmodal__wb-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange-ink); }
+.dvmodal__wb-name { font-size: 13.5px; font-weight: 600; }
+.dvmodal__wb-desc { margin: 8px 0 0; font-size: 13px; line-height: 1.55; color: var(--muted); }
+@media (max-width: 720px) {
+  .dvmodal__foot { padding: 10px 14px 14px; max-height: min(44vh, 300px); }
+}

@@ -4,8 +4,8 @@ import { lazy, Suspense } from 'react'
 import WorkflowSamples from './WorkflowSamples'
 import AIStackGrid from './AIStackGrid'
 import { AppsSection } from './Projects'
-import { useFunnelModal } from './FunnelModal'
-import { websiteFunnel } from '@/data/funnels'
+import { useDashboardModal } from './DashboardModal'
+import { DASHBOARDS } from '@/data/dataviz'
 
 const FunnelBarrel = lazy(() => import('./FunnelBarrel'))
 
@@ -47,11 +47,11 @@ function SectionWindow({ label, children }: { label: string; children: ReactNode
 /** Only the barrel, spinning on the backdrop. Its own page preview still
  *  stacks above (z 9000). */
 export function BarrelPanel() {
-  const { openFull, modal } = useFunnelModal()
+  const { openItem, modal } = useDashboardModal()
   return (
     <div className="ppanel ppanel--barrel">
       <Suspense fallback={<div className="funnels__barrel-skeleton" aria-hidden="true" />}>
-        <FunnelBarrel funnels={websiteFunnel} onOpen={openFull} />
+        <FunnelBarrel funnels={DASHBOARDS} onOpen={openItem} />
       </Suspense>
       {modal}
     </div>

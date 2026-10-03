@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photo frame</title>
+<style>
+  /* 👈 This whole file exists to be loaded via <iframe>, never visited directly. Keeping it a
+     separate, real HTML document is the point: an iframe's own box is sized purely by the CSS on
+     the <iframe> tag itself (width/height), with no competing "intrinsic content size" the way an
+     <img> has — that mismatch (a replaced element's intrinsic size fighting percentage sizing in
+     Flexbox/Grid) was the root cause of the earlier cropping bug. Putting the image inside its own
+     document sidesteps that category of bug entirely. */
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>
+</head>
+<body>
+<img id="photo" alt="">
+<script>
+  // Reads ?src=/project-photos/whatever.jpg from the iframe's own src attribute, so one file
+  // serves every project photo rather than needing one HTML file per image.
+  var params = new URLSearchParams(location.search);
+  var src = params.get('src');
+  if (src) document.getElementById('photo').src = src;
+</script>
+</body>
+</html>

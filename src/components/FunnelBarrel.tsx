@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
-import type { Funnel } from '@/data/funnels'
 
 /**
  * FunnelBarrel - the "dialect barrel gallery" technique.
@@ -13,19 +12,24 @@ import type { Funnel } from '@/data/funnels'
  *
  * Adapted for the portfolio: contained in a section (not fullscreen), idle
  * auto-spin + slow vertical drift + pointer parallax + drag to explore, and
- * clicking a card opens the funnel in the existing modal via onOpen. A
+ * clicking a card hands the item to onOpen (the dashboard viewer). A
  * visually-hidden button list keeps every page keyboard/SR accessible.
  */
 
-type Props = {
-  funnels: Funnel[]
-  onOpen: (funnel: Funnel, trigger?: HTMLElement | null) => void
+/** What a card needs: a thumbnail, and the two hover labels (tag over label). */
+export type BarrelItem = {
+  key: string
+  label: string
+  tag: string
+  thumb: string
 }
 
-function thumbSrc(f: Funnel) {
-  const dir = f.dir ?? 'funnels'
-  return `/${dir}/thumbs/${f.file.replace('.html', '.jpeg')}`
+type Props = {
+  funnels: BarrelItem[]
+  onOpen: (item: BarrelItem, trigger?: HTMLElement | null) => void
 }
+
+const thumbSrc = (f: BarrelItem) => f.thumb
 
 export default function FunnelBarrel({ funnels, onOpen }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null)
@@ -146,7 +150,7 @@ export default function FunnelBarrel({ funnels, onOpen }: Props) {
     scene.add(tilt)
 
     type CardData = {
-      funnel: Funnel
+      funnel: BarrelItem
       baseY: number
       baseAngle: number
       cur: number
@@ -420,7 +424,7 @@ export default function FunnelBarrel({ funnels, onOpen }: Props) {
       {/* Accessible fallback: every page reachable by keyboard / screen reader. */}
       <ul className="funnels__barrel-a11y sr-only">
         {funnels.map((f) => (
-          <li key={f.file}>
+          <li key={f.key}>
             <button type="button" onClick={(e) => onOpen(f, e.currentTarget)}>
               Open {f.label} ({f.tag})
             </button>
