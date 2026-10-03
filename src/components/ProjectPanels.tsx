@@ -69,7 +69,8 @@ export function AIWindow() {
   )
 }
 /** Apps Script Reports: a shelf of projects; picking one swaps the dialog to
- *  that project's drifting screenshot strip, with a way back to the shelf. */
+ *  that project's drifting screenshot strip (screenshots only), with a way
+ *  back to the shelf. */
 export function AppScriptWindow() {
   const [selected, setSelected] = useState<AppScriptProject | null>(null)
 
@@ -86,17 +87,6 @@ export function AppScriptWindow() {
         <ArrowLeft size={16} weight="bold" aria-hidden="true" />
         All projects
       </button>
-      <header className="appscript__head">
-        <h3 className="appscript__title">{selected.title}</h3>
-        <p className="appscript__desc">{selected.desc}</p>
-        <ul className="appscript__tags" role="list">
-          {selected.tags.map((t) => (
-            <li key={t} className="appscript__tag">
-              {t}
-            </li>
-          ))}
-        </ul>
-      </header>
       <WorkflowSamples
         key={selected.slug}
         samples={selected.shots.map((x) => ({ src: x.src, label: x.caption }))}
