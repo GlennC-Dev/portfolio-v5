@@ -145,7 +145,7 @@ export function PlanPanel() {
 type Build = { id: string; label: string; src: string; path: string; Icon: Icon }
 
 const BUILDS: Build[] = [
-  { id: 'ticketing', label: 'Featured Project One', src: '/placeholders/sample-plan.html?doc=1', path: '/featured-one', Icon: Ticket },
+  { id: 'ticketing', label: 'Daily Information Assistant', src: '/projects/daily-information-assistant.html', path: '/daily-information-assistant', Icon: Ticket },
   { id: 'framework', label: 'Featured Project Two', src: '/placeholders/sample-plan.html?doc=2', path: '/featured-two', Icon: Robot },
   { id: 'workflow', label: 'Featured Project Three', src: '/placeholders/sample-plan.html?doc=3', path: '/featured-three', Icon: FlowArrow },
 ]
