@@ -89,23 +89,6 @@ function WorkflowsPreview() {
   )
 }
 
-/** A paper mock of the plan document, the way SamplePlan previews it. */
-function PlanPreview() {
-  return (
-    <div className="bento__media bento__doc" aria-hidden="true">
-      <span className="bento__doc-eyebrow">Lean Six Sigma case study</span>
-      <span className="bento__doc-title">Financial Process Improvement</span>
-      <span className="bento__doc-flow">
-        <i>Define</i>
-        <i>Measure</i>
-        <i>Analyze</i>
-        <i className="is-on">Improve</i>
-      </span>
-      <span className="bento__doc-line" />
-      <span className="bento__doc-line bento__doc-line--short" />
-    </div>
-  )
-}
 
 /** The three builds as Open Builds rows: plate, eyebrow, title, arrow. */
 function FunnelsPreview() {
