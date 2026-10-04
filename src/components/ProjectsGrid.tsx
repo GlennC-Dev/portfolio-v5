@@ -93,13 +93,13 @@ function WorkflowsPreview() {
 function PlanPreview() {
   return (
     <div className="bento__media bento__doc" aria-hidden="true">
-      <span className="bento__doc-eyebrow">Placeholder document</span>
-      <span className="bento__doc-title">Your document title here.</span>
+      <span className="bento__doc-eyebrow">Lean Six Sigma case study</span>
+      <span className="bento__doc-title">Financial Process Improvement</span>
       <span className="bento__doc-flow">
-        <i>Step</i>
-        <i>Step</i>
-        <i>Step?</i>
-        <i className="is-on">Result</i>
+        <i>Define</i>
+        <i>Measure</i>
+        <i>Analyze</i>
+        <i className="is-on">Improve</i>
       </span>
       <span className="bento__doc-line" />
       <span className="bento__doc-line bento__doc-line--short" />
