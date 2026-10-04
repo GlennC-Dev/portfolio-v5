@@ -72,10 +72,16 @@ export function useLenis() {
       // scroller. Passing a non-scrolling wrapper freezes the page.
       const panel = getScroller()
       const usesPanel = !!panel && window.innerWidth >= 1100
-      const content = panel?.firstElementChild as HTMLElement | undefined
 
       const lenis = new Lenis({
-        ...(usesPanel && content ? { wrapper: panel, content } : {}),
+        // At this width the panel is always the scroller, so bind to it
+        // unconditionally. This used to wait for panel.firstElementChild, but
+        // routes are lazy: on a direct load the panel can still be empty when
+        // this runs, Lenis then bound to `window` (which cannot scroll inside
+        // the pinned shell) and swallowed every wheel event - the page looked
+        // frozen. `naiveDimensions` reads the panel's scroll size live, so the
+        // limit also follows route changes and content that grows (accordions).
+        ...(usesPanel && panel ? { wrapper: panel, content: panel, naiveDimensions: true } : {}),
         // Shorter duration + steeper exponential easing makes the wheel feel
         // responsive instead of heavy. 1.1s read as "the page is sluggish".
         // 0.9s with a steeper curve still smooths native step jumps but
