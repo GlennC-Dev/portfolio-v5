@@ -132,10 +132,10 @@ export function PlanPanel() {
   return (
     <div className="ppanel ppanel--frame">
       <FrameBar
-        host="yourdomain.com"
-        path="/sample-plan"
+        host="topgitconsulting.tech"
+        path="/projects/lean-six-sigma-case-study"
       />
-      <LiveFrame src="/placeholders/sample-plan.html" title="Sample document" />
+      <LiveFrame src="/projects/financial-process-improvement.html" title="Financial Process Improvement case study" />
     </div>
   )
 }

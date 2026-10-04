@@ -93,13 +93,13 @@ function WorkflowsPreview() {
 function PlanPreview() {
   return (
     <div className="bento__media bento__doc" aria-hidden="true">
-      <span className="bento__doc-eyebrow">Placeholder document</span>
-      <span className="bento__doc-title">Your document title here.</span>
+      <span className="bento__doc-eyebrow">Lean Six Sigma case study</span>
+      <span className="bento__doc-title">Financial Process Improvement</span>
       <span className="bento__doc-flow">
-        <i>Step</i>
-        <i>Step</i>
-        <i>Step?</i>
-        <i className="is-on">Result</i>
+        <i>Define</i>
+        <i>Measure</i>
+        <i>Analyze</i>
+        <i className="is-on">Improve</i>
       </span>
       <span className="bento__doc-line" />
       <span className="bento__doc-line bento__doc-line--short" />
@@ -151,7 +151,7 @@ function WritingPreview() {
 
 const PROJECTS: Project[] = [
   { id: 'funnels', cat: 'dataviz', index: '01', title: 'Data Visualizations', desc: 'Dashboards made for self-service consumption and automated delivery', Icon: ({ size = 22 }) => <ChartBar size={size} weight="duotone" />, eyebrow: 'Data Visualizations', Section: BarrelPanel, span: 2, Preview: FunnelsPreview },
-  { id: 'plan', cat: 'work', index: '02', title: 'Sample Document', desc: 'PLACEHOLDER - tell me what to put here: the document this opens.', Icon: PlanIcon, logos: [GHL], eyebrow: 'Sample document', Section: PlanPanel, Preview: PlanPreview },
+  { id: 'plan', cat: 'work', index: '02', title: 'Financial Process Improvement', desc: 'A Lean Six Sigma case study: DMAIC applied to a finance workflow, from baseline to modeled outcome.', Icon: PlanIcon, logos: ['/icons/lss-generic.svg'], eyebrow: 'Lean Six Sigma case study', Section: PlanPanel, Preview: PlanPreview },
   { id: 'workflows', cat: 'work', index: '06', title: 'Project Title', desc: 'PLACEHOLDER - tell me what to put here: what these screens show.', Icon: FlowIcon, logos: [GHL], eyebrow: 'Screenshots', Section: AutomationsPanel, Preview: WorkflowsPreview },
   { id: 'appscript', cat: 'work', index: '07', title: 'Apps Script Reports', desc: 'Scripted reports, form maintenance, and internal tooling that replace recurring manual work.', Icon: ({ size = 22 }) => <Table size={size} weight="duotone" />, eyebrow: 'Apps Script Reports', Section: AppScriptWindow, Preview: AppScriptPreview },
   { id: 'writing', cat: 'writing', index: '08', title: 'Technical Writing', desc: 'Turning complex workflows into clear, actionable frameworks.', Icon: ({ size = 22 }) => <FileText size={size} weight="duotone" />, eyebrow: 'Technical Writing', Section: WritingWindow, span: 2, Preview: WritingPreview },
