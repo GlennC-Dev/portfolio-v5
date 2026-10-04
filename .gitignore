@@ -17,3 +17,7 @@ pnpm-debug.log*
 # needs it - so it is the one env file that is tracked.
 !.env.production
 !.env.example
+
+# Lovable (bun.lock) is the source of truth for dependencies. A stray
+# package-lock.json from a local `npm install` should not be committed.
+package-lock.json
