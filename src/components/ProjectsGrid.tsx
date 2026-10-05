@@ -66,7 +66,7 @@ const BUILD_DESC = 'PLACEHOLDER - tell me what to put here: two lines on what th
  *  pop-up. */
 const BUILDS: Project[] = [
   { id: 'ticketing', cat: 'ai', index: '03', kicker: 'n8n · AI Automation', title: 'Daily Information Assistant', desc: 'A modular Telegram assistant combining AI intent routing, weather, news feeds, and Google Sheets finance.', Icon: () => <Ticket size={20} weight="duotone" />, logos: ['/icons/ai/n8n.svg', '/icons/ai/telegram.svg'], eyebrow: 'Featured build', Section: TicketingPanel, Preview: () => null },
-  { id: 'framework', cat: 'ai', index: '04', kicker: 'Placeholder category', title: 'Featured Project Two', desc: BUILD_DESC, Icon: () => <Robot size={20} weight="duotone" />, logos: [CLAUDE_CODE], eyebrow: 'Featured build', Section: FrameworkPanel, Preview: () => null },
+  { id: 'framework', cat: 'ai', index: '04', kicker: 'n8n · LLM Grounding', title: 'AI-Driven Portfolio Chatbot', desc: 'A grounded portfolio assistant with modular resume context, full QA logging, and human escalation fallback.', Icon: () => <Robot size={20} weight="duotone" />, logos: ['/icons/ai/n8n.svg', '/icons/googleworkspace.svg'], eyebrow: 'Featured build', Section: FrameworkPanel, Preview: () => null },
   { id: 'workflow', cat: 'ai', index: '05', kicker: 'Placeholder category', title: 'Featured Project Three', desc: BUILD_DESC, Icon: () => <FlowArrow size={20} weight="duotone" />, logos: [CLAUDE_CODE, CODEX, HERMES], eyebrow: 'Featured build', Section: WorkflowPanel, Preview: () => null },
 ]
 

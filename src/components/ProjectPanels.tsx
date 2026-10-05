@@ -146,7 +146,7 @@ type Build = { id: string; label: string; src: string; path: string; Icon: Icon 
 
 const BUILDS: Build[] = [
   { id: 'ticketing', label: 'Daily Information Assistant', src: '/projects/daily-information-assistant.html', path: '/projects/n8n-daily-information-assistant', Icon: Ticket },
-  { id: 'framework', label: 'Featured Project Two', src: '/placeholders/sample-plan.html?doc=2', path: '/featured-two', Icon: Robot },
+  { id: 'framework', label: 'AI-Driven Portfolio Chatbot', src: '/projects/ai-portfolio-assistant.html', path: '/projects/ai-portfolio-assistant', Icon: Robot },
   { id: 'workflow', label: 'Featured Project Three', src: '/placeholders/sample-plan.html?doc=3', path: '/featured-three', Icon: FlowArrow },
 ]
 
