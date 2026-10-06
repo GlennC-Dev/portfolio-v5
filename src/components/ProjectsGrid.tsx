@@ -46,9 +46,9 @@ const FILTERS: { key: Cat | 'all'; label: string }[] = [
 
 /** Example tool marks, from public/icons. Swap for what you build with. */
 const GHL = '/icons/gohighlevel.png'
-const CLAUDE_CODE = '/icons/claude-code-logo.png'
-const CODEX = '/icons/ai/codex.svg'
-const HERMES = '/icons/ai/hermes.svg'
+
+
+
 
 const WF_SHOTS = ['project-1.jpg', 'project-2.jpg', 'project-3.jpg', 'project-4.jpg'].map(
   (f) => `/placeholders/${f}`,
@@ -60,14 +60,14 @@ const FUNNEL_SHOTS = DASHBOARDS.filter((d) => d.index === 0).slice(0, 3)
 // The Technical Writing card's reel: each document's cover.
 const DOC_SHOTS = WRITING.map((w) => w.shots[0].src)
 
-const BUILD_DESC = 'PLACEHOLDER - tell me what to put here: two lines on what this project is and the result it got.'
+
 
 /** The three featured builds: each its own card in the stack, each its own
  *  pop-up. */
 const BUILDS: Project[] = [
   { id: 'ticketing', cat: 'ai', index: '03', kicker: 'n8n · AI Automation', title: 'Daily Information Assistant', desc: 'A modular Telegram assistant combining AI intent routing, weather, news feeds, and Google Sheets finance.', Icon: () => <Ticket size={20} weight="duotone" />, logos: ['/icons/ai/n8n.svg', '/icons/ai/telegram.svg'], eyebrow: 'Featured build', Section: TicketingPanel, Preview: () => null },
   { id: 'framework', cat: 'ai', index: '04', kicker: 'n8n · LLM Grounding', title: 'AI-Driven Portfolio Chatbot', desc: 'A grounded portfolio assistant with modular resume context, full QA logging, and human escalation fallback.', Icon: () => <Robot size={20} weight="duotone" />, logos: ['/icons/ai/n8n.svg', '/icons/googleworkspace.svg'], eyebrow: 'Featured build', Section: FrameworkPanel, Preview: () => null },
-  { id: 'workflow', cat: 'ai', index: '05', kicker: 'Placeholder category', title: 'Featured Project Three', desc: BUILD_DESC, Icon: () => <FlowArrow size={20} weight="duotone" />, logos: [CLAUDE_CODE, CODEX, HERMES], eyebrow: 'Featured build', Section: WorkflowPanel, Preview: () => null },
+  { id: 'workflows', cat: 'work', index: '05', kicker: 'Screenshots', title: 'Project Title', desc: 'PLACEHOLDER - tell me what to put here: what these screens show.', Icon: () => <FlowArrow size={20} weight="duotone" />, logos: [GHL], eyebrow: 'Screenshots', Section: AutomationsPanel, Preview: () => null },
 ]
 
 // The Apps Script card's reel: each project's cover.
@@ -75,7 +75,7 @@ const APPSCRIPT_SHOTS = APPSCRIPT.map((p) => p.shots[0].src)
 
 /* ---------- Previews ---------- */
 
-function WorkflowsPreview() {
+export function WorkflowsPreview() {
   return (
     <div className="bento__media bento__reel" aria-hidden="true">
       <div className="bento__reel-track">
@@ -135,7 +135,7 @@ function WritingPreview() {
 const PROJECTS: Project[] = [
   { id: 'funnels', cat: 'dataviz', index: '01', title: 'Data Visualizations', desc: 'Dashboards made for self-service consumption and automated delivery', Icon: ({ size = 22 }) => <ChartBar size={size} weight="duotone" />, eyebrow: 'Data Visualizations', Section: BarrelPanel, span: 2, Preview: FunnelsPreview },
   { id: 'plan', cat: 'work', index: '02', title: 'Financial Process Improvement', desc: 'A Lean Six Sigma case study: DMAIC applied to a finance workflow, from baseline to modeled outcome.', Icon: PlanIcon, logos: ['/icons/lss-generic.svg'], eyebrow: 'Lean Six Sigma case study', Section: PlanPanel, Preview: () => null },
-  { id: 'workflows', cat: 'work', index: '06', title: 'Project Title', desc: 'PLACEHOLDER - tell me what to put here: what these screens show.', Icon: FlowIcon, logos: [GHL], eyebrow: 'Screenshots', Section: AutomationsPanel, Preview: WorkflowsPreview },
+  { id: 'workflow', cat: 'work', index: '06', title: 'Completion Rate', desc: 'A KPI redesign from ticket volume to workload completion, sustaining a 95–98% completion rate.', Icon: FlowIcon, logos: ['/icons/tableau-generic.svg', '/icons/powerquery-generic.svg'], eyebrow: 'Featured build', Section: WorkflowPanel, Preview: () => null },
   { id: 'appscript', cat: 'work', index: '07', title: 'Apps Script Reports', desc: 'Scripted reports, form maintenance, and internal tooling that replace recurring manual work.', Icon: ({ size = 22 }) => <Table size={size} weight="duotone" />, eyebrow: 'Apps Script Reports', Section: AppScriptWindow, Preview: AppScriptPreview },
   { id: 'writing', cat: 'writing', index: '08', title: 'Technical Writing', desc: 'Turning complex workflows into clear, actionable frameworks.', Icon: ({ size = 22 }) => <FileText size={size} weight="duotone" />, eyebrow: 'Technical Writing', Section: WritingWindow, span: 2, Preview: WritingPreview },
 ]

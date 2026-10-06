@@ -147,7 +147,7 @@ type Build = { id: string; label: string; src: string; path: string; Icon: Icon 
 const BUILDS: Build[] = [
   { id: 'ticketing', label: 'Daily Information Assistant', src: '/projects/daily-information-assistant.html', path: '/projects/n8n-daily-information-assistant', Icon: Ticket },
   { id: 'framework', label: 'AI-Driven Portfolio Chatbot', src: '/projects/ai-portfolio-assistant.html', path: '/projects/ai-portfolio-assistant', Icon: Robot },
-  { id: 'workflow', label: 'Featured Project Three', src: '/placeholders/sample-plan.html?doc=3', path: '/featured-three', Icon: FlowArrow },
+  { id: 'workflow', label: 'Completion Rate case study', src: '/projects/completion-rate-case-study.html', path: '/projects/completion-rate-case-study', Icon: FlowArrow },
 ]
 
 /** One build, framed, open on arrival. */
