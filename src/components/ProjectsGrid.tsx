@@ -75,7 +75,7 @@ const APPSCRIPT_SHOTS = APPSCRIPT.map((p) => p.shots[0].src)
 
 /* ---------- Previews ---------- */
 
-function WorkflowsPreview() {
+export function WorkflowsPreview() {
   return (
     <div className="bento__media bento__reel" aria-hidden="true">
       <div className="bento__reel-track">
