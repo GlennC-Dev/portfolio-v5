@@ -46,9 +46,9 @@ const FILTERS: { key: Cat | 'all'; label: string }[] = [
 
 /** Example tool marks, from public/icons. Swap for what you build with. */
 const GHL = '/icons/gohighlevel.png'
-const CLAUDE_CODE = '/icons/claude-code-logo.png'
-const CODEX = '/icons/ai/codex.svg'
-const HERMES = '/icons/ai/hermes.svg'
+
+
+
 
 const WF_SHOTS = ['project-1.jpg', 'project-2.jpg', 'project-3.jpg', 'project-4.jpg'].map(
   (f) => `/placeholders/${f}`,
@@ -60,7 +60,7 @@ const FUNNEL_SHOTS = DASHBOARDS.filter((d) => d.index === 0).slice(0, 3)
 // The Technical Writing card's reel: each document's cover.
 const DOC_SHOTS = WRITING.map((w) => w.shots[0].src)
 
-const BUILD_DESC = 'PLACEHOLDER - tell me what to put here: two lines on what this project is and the result it got.'
+
 
 /** The three featured builds: each its own card in the stack, each its own
  *  pop-up. */
