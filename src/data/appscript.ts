@@ -56,8 +56,7 @@ export const APPSCRIPT: AppScriptProject[] = [
     shots: [
       { src: '/project-photos/projects_appscript_3_oversight_1.png', caption: 'Automated workflow diagram for Google Forms response monitoring and maintenance' },
       { src: '/project-photos/projects_appscript_3_oversight_2.png', caption: 'Apps Script function for retrieving Google Forms response count and timestamp tracking' },
-      { src: '/project-photos/projects_appscript_3_oversight_3.png', caption: 'Automated response clearing logic with email notification system for form oversight' },
-      { src: '/project-photos/projects_appscript_3_oversight_4.png', caption: 'Time-based triggers configuration for automated form monitoring and maintenance' },
+      { src: '/project-photos/projects_appscript_3_oversight_3.png', caption: 'Time-based triggers configuration for automated form monitoring and maintenance' },
     ],
   },
   {
@@ -68,8 +67,7 @@ export const APPSCRIPT: AppScriptProject[] = [
     shots: [
       { src: '/project-photos/projects_appscript_4_dbms_1.png', caption: 'Apps Script function for database error handling and input validation with automated notification system' },
       { src: '/project-photos/projects_appscript_4_dbms_2.png', caption: 'Database management workflow showing data extraction, validation, and automated email population for change requests' },
-      { src: '/project-photos/projects_appscript_4_dbms_3.png', caption: 'Request processing automation with status tracking, range manipulation, and email notification system for database updates' },
-      { src: '/project-photos/projects_appscript_4_dbms_4.png', caption: 'Version control tracking spreadsheet showing request status, dates, ticket references, and change history for database management' },
+      { src: '/project-photos/projects_appscript_4_dbms_3.png', caption: 'Version control tracking spreadsheet showing request status, dates, ticket references, and change history for database management' },
     ],
   },
 ]
