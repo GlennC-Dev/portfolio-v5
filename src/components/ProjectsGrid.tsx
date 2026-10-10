@@ -105,10 +105,19 @@ function FunnelsPreview() {
 
 /** The Apps Script Reports card: a drifting reel of each project's cover. */
 function AppScriptPreview() {
+  return <ReelPreview shots={APPSCRIPT_SHOTS} />
+}
+
+// Slices of the full case-study pages, so the card reads as the page scrolling.
+const reel = (name: string) => [1, 2, 3, 4].map((n) => `/project-photos/thumbs/projects_reel_${name}_${n}.jpg`)
+const COMPLETION_SHOTS = reel('completionrate')
+const LSS_SHOTS = reel('lss')
+
+function ReelPreview({ shots }: { shots: string[] }) {
   return (
     <div className="bento__media bento__reel" aria-hidden="true">
       <div className="bento__reel-track">
-        {[...APPSCRIPT_SHOTS, ...APPSCRIPT_SHOTS].map((src, i) => (
+        {[...shots, ...shots].map((src, i) => (
           <span key={i} className="bento__shot">
             <img src={src} alt="" loading="lazy" decoding="async" />
           </span>
@@ -134,8 +143,8 @@ function WritingPreview() {
 
 const PROJECTS: Project[] = [
   { id: 'funnels', cat: 'dataviz', index: '01', title: 'Data Visualizations', desc: 'Dashboards made for self-service consumption and automated delivery', Icon: ({ size = 22 }) => <ChartBar size={size} weight="duotone" />, eyebrow: 'Data Visualizations', Section: BarrelPanel, span: 2, Preview: FunnelsPreview },
-  { id: 'plan', cat: 'work', index: '02', title: 'Financial Process Improvement', desc: 'A Lean Six Sigma case study: DMAIC applied to a finance workflow, from baseline to modeled outcome.', Icon: PlanIcon, logos: ['/icons/lss-generic.svg'], eyebrow: 'Lean Six Sigma case study', Section: PlanPanel, Preview: () => null },
-  { id: 'workflow', cat: 'work', index: '06', title: 'Completion Rate', desc: 'A KPI redesign from ticket volume to workload completion, sustaining a 95–98% completion rate.', Icon: FlowIcon, logos: ['/icons/tableau-generic.svg', '/icons/powerquery-generic.svg'], eyebrow: 'Featured build', Section: WorkflowPanel, Preview: () => null },
+  { id: 'plan', cat: 'work', index: '02', title: 'Financial Process Improvement', desc: 'A Lean Six Sigma case study: DMAIC applied to a finance workflow, from baseline to modeled outcome.', Icon: PlanIcon, logos: ['/icons/lss-generic.svg'], eyebrow: 'Lean Six Sigma case study', Section: PlanPanel, Preview: () => <ReelPreview shots={LSS_SHOTS} /> },
+  { id: 'workflow', cat: 'work', index: '06', title: 'Completion Rate', desc: 'A KPI redesign from ticket volume to workload completion, sustaining a 95–98% completion rate.', Icon: FlowIcon, logos: ['/icons/tableau-generic.svg', '/icons/powerquery-generic.svg'], eyebrow: 'Featured build', Section: WorkflowPanel, Preview: () => <ReelPreview shots={COMPLETION_SHOTS} /> },
   { id: 'appscript', cat: 'work', index: '07', title: 'Apps Script Reports', desc: 'Scripted reports, form maintenance, and internal tooling that replace recurring manual work.', Icon: ({ size = 22 }) => <Table size={size} weight="duotone" />, eyebrow: 'Apps Script Reports', Section: AppScriptWindow, Preview: AppScriptPreview },
   { id: 'writing', cat: 'writing', index: '08', title: 'Technical Writing', desc: 'Turning complex workflows into clear, actionable frameworks.', Icon: ({ size = 22 }) => <FileText size={size} weight="duotone" />, eyebrow: 'Technical Writing', Section: WritingWindow, span: 2, Preview: WritingPreview },
 ]
