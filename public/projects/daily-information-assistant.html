@@ -332,36 +332,10 @@ footer strong{color:#cbd2dc}
 </article>
 </div>
 </div>
-</section><section class="section" id="decisions">
-<div class="container">
-<div class="section-head">
-<div><div class="kicker">06 / Design decisions</div><h2>Built around practical constraints.</h2></div>
-<p class="lead">
-        The interesting part of the system is not just the number of integrations. It is the set of decisions
-        made to keep the workflow useful on limited models, private enough for its intended audience, and manageable to maintain.
-      </p>
-</div>
-<div class="principles">
-<div class="principle-list">
-<div class="principle"><strong>Privacy-conscious entry point</strong><span>Authorization happens before the request reaches the main AI routing layer, reducing the chance that an unintended user can interact with downstream tools.</span></div>
-<div class="principle"><strong>Modular routing</strong><span>Weather, news, finance, and fallback conversation are separated into their own paths instead of being forced through one monolithic chain.</span></div>
-<div class="principle"><strong>Compute where it is cheapest</strong><span>Finance-heavy calculations are prepared in Google Sheets so the AI agent can retrieve concise results rather than repeatedly recomputing raw data.</span></div>
-<div class="principle"><strong>Graceful fallback</strong><span>Requests that do not match a structured module are handed to an “Others” agent, preventing the conversation from ending at an unrecognized intent.</span></div>
-</div>
-<div class="callout">
-<h3>The constraint shaped the architecture.</h3>
-<p>
-          Free and lightweight models were not always reliable for heavier financial processing.
-          Rather than treating that as a model-selection problem alone, the workflow was redesigned around it:
-          preprocess what can be prepared ahead of time, then let the model focus on interpretation and communication.
-        </p>
-</div>
-</div>
-</div>
 </section><section class="section" id="challenges">
 <div class="container">
 <div class="section-head">
-<div><div class="kicker">07 / Engineering challenges</div><h2>Most of the work was in the seams.</h2></div>
+<div><div class="kicker">06 / Engineering challenges</div><h2>Most of the work was in the seams.</h2></div>
 <p class="lead">
         The hard problems were less about drawing the workflow and more about making independent nodes behave like one reliable system.
       </p>
@@ -377,7 +351,7 @@ footer strong{color:#cbd2dc}
 <div class="container">
 <div class="section-head">
 <div>
-<div class="kicker">08 / Outcome</div>
+<div class="kicker">07 / Outcome</div>
 <h2>A practical pattern for AI-assisted automation.</h2>
 </div>
 <p class="lead">
