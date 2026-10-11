@@ -60,7 +60,7 @@ export default function ServicesGrid() {
   return (
     <section className="pgrid sgrid" aria-labelledby="services-title">
       <header className="pgrid__head">
-        <span className="pgrid__eyebrow">Skills &amp; Capabilities</span>
+        <span className="pgrid__eyebrow">Skills &amp; Experience</span>
         <h1 className="pgrid__title" id="services-title">
           What I bring. <em>How</em> I&apos;ve applied it.
         </h1>
