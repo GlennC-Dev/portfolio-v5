@@ -66,7 +66,7 @@ export function useDashboardModal() {
     const count = workbook.dashboards.length
     modal = createPortal(
       <div
-        className="funnels__modal"
+        className="funnels__modal dvmodal"
         role="dialog"
         aria-modal="true"
         aria-label={`${dashboard.name} - ${workbook.name}`}
@@ -74,7 +74,7 @@ export function useDashboardModal() {
           if (e.target === e.currentTarget) close()
         }}
       >
-        <div className="funnels__modal-shell">
+        <div className="funnels__modal-shell dvmodal__shell">
           <div className="funnels__modal-bar">
             <div className="funnels__modal-lights" aria-hidden="true">
               <span className="funnels__modal-light funnels__modal-light--red" />
