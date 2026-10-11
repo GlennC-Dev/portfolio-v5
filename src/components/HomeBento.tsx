@@ -14,7 +14,6 @@ import {
   ArrowsClockwise,
   SealCheck,
 } from '@/components/slab'
-import { gymFunnel, bookingFunnel, websiteFunnel, type Funnel } from '@/data/funnels'
 import { aiStack, type StackNode } from '@/data/ai-stack'
 import { profile } from '@/data/profile'
 import { isHiddenView } from '@/data/hiddenViews'
@@ -30,10 +29,8 @@ import { CAPABILITIES } from '@/data/capabilities'
  * height and Home stays a single viewport.
  */
 
-const thumbSrc = (f: Funnel) =>
-  `/home/${f.dir ?? 'funnels'}-${f.file.replace('.html', '.jpeg')}`
-
-const PROJECT_SHOTS = [gymFunnel[0], bookingFunnel[0], websiteFunnel[0], gymFunnel[1]].filter(Boolean)
+// Three dashboard crops from the Data Visualizations barrel.
+const PROJECT_SHOTS = [1, 2, 3].map((n) => `/project-photos/thumbs/projects_reel_home_${n}.jpg`)
 
 // The four capabilities (data/capabilities.ts), each with its own icon.
 const CAPABILITY_ICONS = [ChartBar, Gear, Sparkle, ArrowsClockwise] as const
@@ -83,14 +80,14 @@ export default function HomeBento() {
 
   return (
     <nav className={`bento${showQuotes ? '' : ' bento--no-quotes'}`} aria-label="Explore the portfolio">
-      {/* Projects: the funnel thumbnails drift upward on a looped track. */}
+      {/* Projects: dashboard crops drift upward on a looped track. */}
       <Link to="/projects" className="bento__card bento__card--projects">
         <CardHead Icon={FolderOpen} title="Projects" desc="Every solution shipped. What it solved, how it works, and what came out on the other end." />
         <div className="bento__media bento__reel" aria-hidden="true">
           <div className="bento__reel-track">
-            {[...PROJECT_SHOTS, ...PROJECT_SHOTS].map((f, i) => (
+            {[...PROJECT_SHOTS, ...PROJECT_SHOTS].map((src, i) => (
               <span key={i} className="bento__shot">
-                <img src={thumbSrc(f)} alt="" loading="lazy" decoding="async" />
+                <img src={src} alt="" loading="lazy" decoding="async" />
               </span>
             ))}
           </div>
