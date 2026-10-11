@@ -28,6 +28,8 @@
   text-transform: uppercase;
   color: var(--orange-ink);
 }
+/* Section names read like a comment in code. */
+.pgrid__eyebrow::before { content: '// '; }
 .pgrid__title {
   font-size: clamp(30px, 3.1vw, 60px);
   font-weight: 700;

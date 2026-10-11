@@ -237,6 +237,7 @@
    Everything else assembles around it once the class is dropped. */
 html.is-intro-head .home__title { opacity: 0; }
 
+html.is-intro .home__eyebrow,
 html.is-intro .home__cta,
 html.is-intro .home__lede,
 html.is-intro .home__glass,
@@ -300,6 +301,7 @@ html.is-intro .rail__inner > * {
 @media (prefers-reduced-motion: reduce) {
   .boot { display: none; }
   html.is-intro-head .home__title,
+  html.is-intro .home__eyebrow,
   html.is-intro .home__cta,
   html.is-intro .home__lede,
   html.is-intro .home__glass,

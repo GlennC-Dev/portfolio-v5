@@ -37,6 +37,7 @@ export default function Home() {
       {phone && <HomeProfile />}
 
       <div className="home__head">
+        <span className="pgrid__eyebrow home__eyebrow">Home</span>
         <div className="home__headline">
           <h1 className="home__title" id="home-title">
             <span className="home__line">
