@@ -278,8 +278,7 @@
 .sgrid__bullet svg { flex: none; margin-top: 2px; color: var(--orange); }
 
 /* ---------- The certifications ---------- */
-/* Six columns: the three Lean Six Sigma cards take two each, the two Programiz
-   cards take three each, so both rows run edge to edge. */
+/* Six columns, every card two wide: three on top, the other two centred below. */
 .sgrid__certs {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -290,7 +289,9 @@
   padding: 0;
 }
 .sgrid__cert { list-style: none; grid-column: span 2; min-width: 0; }
-.sgrid__cert:nth-child(n + 4) { grid-column: span 3; }
+/* The Programiz pair keeps the same card width and sits centred under the three. */
+.sgrid__cert:nth-child(4) { grid-column: 2 / span 2; }
+.sgrid__cert:nth-child(5) { grid-column: 4 / span 2; }
 .sgrid__cert .bento__title { min-height: calc(2 * 1.25em); }
 .sgrid__cert-id {
   display: flex;
@@ -316,7 +317,8 @@
 @media (max-width: 1099px) {
   .sgrid__certs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sgrid__cert,
-  .sgrid__cert:nth-child(n + 4) { grid-column: span 1; }
+  .sgrid__cert:nth-child(4),
+  .sgrid__cert:nth-child(5) { grid-column: span 1; }
 }
 @media (max-width: 639px) {
   .sgrid__certs { grid-template-columns: minmax(0, 1fr); }
