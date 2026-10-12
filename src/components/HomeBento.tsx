@@ -137,7 +137,7 @@ export default function HomeBento() {
       </Link>
 
       {/* Credentials: two chip rows scrolling against each other, like AI Builds. */}
-      <Link to="/services" className="bento__card bento__card--creds">
+      <Link to="/services#certifications" className="bento__card bento__card--creds">
         <CardHead Icon={Medal} title="Credentials" desc="Each one fills a gap. Fewer than most, essential nevertheless" />
         <div className="bento__media bento__chips" aria-hidden="true">
           {CRED_ROWS.map((row, r) => (

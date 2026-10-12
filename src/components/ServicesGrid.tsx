@@ -137,7 +137,7 @@ export default function ServicesGrid() {
         </div>
 
         {/* Certifications: three on the Lean Six Sigma path, then two Programiz. */}
-        <div className="sgrid__offers sgrid__certs-wrap">
+        <div id="certifications" className="sgrid__offers sgrid__certs-wrap">
           <div className="sgrid__offers-head">
             <h2 className="sgrid__offers-title">Backed by credentials.</h2>
             <p className="sgrid__offers-sub">Issued, dated, and on record.</p>

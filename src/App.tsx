@@ -22,7 +22,7 @@ import { watchFrameHealth } from '@/lib/perf'
 export default function App() {
   useLenis()
 
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   const FIXED_ROUTES = ['/', '/projects', '/testimonials', '/about', '/contact']
   const isFixed = FIXED_ROUTES.includes(pathname)
   // Below the shell breakpoint the rail is gone: a bottom tab bar navigates,
@@ -33,9 +33,15 @@ export default function App() {
 
   // The panel is the scroller, so a route change has to reset it by hand -
   // the browser only restores scroll on the document.
+  // A #section in the link lands on that section instead of the top.
   useEffect(() => {
     panelRef.current?.scrollTo({ top: 0, behavior: 'auto' })
-  }, [pathname])
+    if (!hash) return
+    const t = window.setTimeout(() => {
+      document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView({ block: 'start' })
+    }, 120)
+    return () => window.clearTimeout(t)
+  }, [pathname, hash])
 
   // The page measures its own frame health once the intro clears and steps
   // the design down if it cannot hold it - see lib/perf.ts.

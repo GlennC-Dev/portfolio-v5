@@ -278,6 +278,7 @@
 .sgrid__bullet svg { flex: none; margin-top: 2px; color: var(--orange); }
 
 /* ---------- The certifications ---------- */
+.sgrid__certs-wrap { scroll-margin-top: 40px; }
 /* Six columns, every card two wide: three on top, the other two centred below. */
 .sgrid__certs {
   display: grid;
