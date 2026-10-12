@@ -3,6 +3,7 @@ import { MagnifyingGlass, Wrench, Lightning, CheckCircle } from '@/components/sl
 import type { Icon } from '@/components/slab'
 import ExperienceTimeline from '@/components/ExperienceTimeline'
 import { CAPABILITIES } from '@/data/capabilities'
+import { CERTIFICATIONS } from '@/data/certifications'
 
 /**
  * ServicesGrid - the Services view on one glass sheet.
@@ -130,6 +131,34 @@ export default function ServicesGrid() {
                     </li>
                   ))}
                 </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Certifications: three on the Lean Six Sigma path, then two Programiz. */}
+        <div className="sgrid__offers sgrid__certs-wrap">
+          <div className="sgrid__offers-head">
+            <h2 className="sgrid__offers-title">Backed by credentials.</h2>
+            <p className="sgrid__offers-sub">Issued, dated, and on record.</p>
+          </div>
+          <ul className="bento sgrid__certs" role="list">
+            {CERTIFICATIONS.map((c, i) => (
+              <li key={c.credentialId} className="bento__card sgrid__cert">
+                <span className="bento__head">
+                  <span className="sgrid__service-top">
+                    <span className="sgrid__service-index" aria-hidden="true">
+                      0{i + 1} / 0{CERTIFICATIONS.length}
+                    </span>
+                  </span>
+                  <span className="bento__title">{c.name}</span>
+                  <span className="bento__desc">{c.issuer}</span>
+                </span>
+                <span className="sgrid__chip">{c.issued}</span>
+                <span className="sgrid__cert-id">
+                  <span className="sgrid__cert-id-label">Credential ID</span>
+                  <span className="sgrid__cert-id-value">{c.credentialId}</span>
+                </span>
               </li>
             ))}
           </ul>

@@ -277,6 +277,51 @@
 }
 .sgrid__bullet svg { flex: none; margin-top: 2px; color: var(--orange); }
 
+/* ---------- The certifications ---------- */
+/* Six columns: the three Lean Six Sigma cards take two each, the two Programiz
+   cards take three each, so both rows run edge to edge. */
+.sgrid__certs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: none;
+  gap: clamp(8px, 1.2vw, 14px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sgrid__cert { list-style: none; grid-column: span 2; min-width: 0; }
+.sgrid__cert:nth-child(n + 4) { grid-column: span 3; }
+.sgrid__cert .bento__title { min-height: calc(2 * 1.25em); }
+.sgrid__cert-id {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.sgrid__cert-id-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sgrid__cert-id-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: clamp(11px, 0.7vw, 12.5px);
+  color: var(--navy);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1099px) {
+  .sgrid__certs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sgrid__cert,
+  .sgrid__cert:nth-child(n + 4) { grid-column: span 1; }
+}
+@media (max-width: 639px) {
+  .sgrid__certs { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* ---------- The experience ---------- */
 .sgrid__exp { display: flex; flex-direction: column; gap: clamp(14px, 2vh, 22px); min-width: 0; }
 .sgrid__exp-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
