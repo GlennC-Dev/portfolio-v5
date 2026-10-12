@@ -12,7 +12,9 @@ import {
   Gear,
   Sparkle,
   ArrowsClockwise,
-  SealCheck,
+  Certificate,
+  Code,
+  Database,
 } from '@/components/slab'
 import { aiStack, type StackNode } from '@/data/ai-stack'
 import { profile } from '@/data/profile'
@@ -35,6 +37,20 @@ const PROJECT_SHOTS = [1, 2, 3].map((n) => `/project-photos/thumbs/projects_reel
 // The four capabilities (data/capabilities.ts), each with its own icon.
 const CAPABILITY_ICONS = [ChartBar, Gear, Sparkle, ArrowsClockwise] as const
 
+
+// Certifications and core languages, in two rows. Each row is repeated in the
+// render so the loop has no gap on a wide card.
+const CRED_ROWS = [
+  [
+    { name: 'LSSGB', Icon: Medal },
+    { name: 'LSSYB', Icon: Medal },
+    { name: 'AI-LSSP', Icon: Certificate },
+  ],
+  [
+    { name: 'Python', Icon: Code },
+    { name: 'SQL', Icon: Database },
+  ],
+]
 
 const CLIENTS = [
   { name: 'Client Name 1', role: 'PLACEHOLDER - your role for them', work: 'Tag · Tag · Tag', logo: '/placeholders/logo.svg' },
@@ -126,17 +142,22 @@ export default function HomeBento() {
         </div>
       </Link>
 
-      {/* Credentials: the badge that matters, on its plate. */}
-      <Link to="/about" className="bento__card bento__card--creds">
+      {/* Credentials: two chip rows scrolling against each other, like AI Builds. */}
+      <Link to="/services" className="bento__card bento__card--creds">
         <CardHead Icon={Medal} title="Credentials" desc="Each one fills a gap. Fewer than most, essential nevertheless" />
-        <div className="bento__media bento__badge" aria-hidden="true">
-          <span className="bento__badge-ring">
-            <img src="/placeholders/badge.svg" alt="" width={72} height={72} />
-          </span>
-          <span className="bento__badge-tag">
-            <SealCheck size={14} weight="fill" />
-            Your Credential
-          </span>
+        <div className="bento__media bento__chips" aria-hidden="true">
+          {CRED_ROWS.map((row, r) => (
+            <div key={r} className="bento__chip-row" data-dir={r ? 'right' : 'left'}>
+              <div className="bento__chip-track">
+                {Array.from({ length: 4 }, () => row).flat().map((c, i) => (
+                  <span key={`${c.name}-${i}`} className="bento__chip">
+                    <c.Icon size={15} weight="duotone" />
+                    {c.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </Link>
 
