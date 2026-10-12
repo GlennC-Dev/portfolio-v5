@@ -13,8 +13,6 @@ import {
   Sparkle,
   ArrowsClockwise,
   Certificate,
-  Code,
-  Database,
 } from '@/components/slab'
 import { aiStack, type StackNode } from '@/data/ai-stack'
 import { profile } from '@/data/profile'
@@ -38,17 +36,13 @@ const PROJECT_SHOTS = [1, 2, 3].map((n) => `/project-photos/thumbs/projects_reel
 const CAPABILITY_ICONS = [ChartBar, Gear, Sparkle, ArrowsClockwise] as const
 
 
-// Certifications and core languages, in two rows. Each row is repeated in the
+// The certifications, in one row, by full name. The row is repeated in the
 // render so the loop has no gap on a wide card.
 const CRED_ROWS = [
   [
-    { name: 'LSSGB', Icon: Medal },
-    { name: 'LSSYB', Icon: Medal },
-    { name: 'AI-LSSP', Icon: Certificate },
-  ],
-  [
-    { name: 'Python', Icon: Code },
-    { name: 'SQL', Icon: Database },
+    { name: 'Lean Six Sigma Yellow Belt', Icon: Medal },
+    { name: 'Lean Six Sigma Green Belt', Icon: Medal },
+    { name: 'AI-Enabled Lean Six Sigma Practitioner', Icon: Certificate },
   ],
 ]
 
