@@ -1,6 +1,8 @@
 import type { CSSProperties } from 'react'
+import { Link } from 'react-router-dom'
 import { ArrowUpRight, MapPin } from '@/components/slab'
 import { profile } from '@/data/profile'
+import { CERTIFICATIONS } from '@/data/certifications'
 
 /**
  * AboutGrid - the About view as a fixed viewport.
@@ -55,6 +57,8 @@ const CAPABILITIES: Capability[] = [
   },
 ]
 
+const GREEN_BELT = CERTIFICATIONS.find((c) => c.name === 'Lean Six Sigma Green Belt') ?? CERTIFICATIONS[0]
+
 export default function AboutGrid() {
   return (
     <section className="pgrid agrid" aria-labelledby="about-title">
@@ -105,15 +109,16 @@ export default function AboutGrid() {
 
           {/* One plate, two cells sharing a mark / title / meta anatomy. */}
           <div className="agrid__bar">
-            <span className="agrid__cell">
+            <Link className="agrid__cell" to="/services#certifications">
               <span className="agrid__cell-mark agrid__cell-mark--img">
                 <img src="/icons/lss-generic.svg" alt="" loading="lazy" decoding="async" />
               </span>
               <span className="agrid__cell-copy">
-                <span className="agrid__cell-title">Lean Six Sigma Green Belt</span>
-                <span className="agrid__cell-meta">PLACEHOLDER - credential ID</span>
+                <span className="agrid__cell-title">{GREEN_BELT.name}</span>
+                <span className="agrid__cell-meta agrid__cell-meta--id">ID: {GREEN_BELT.credentialId}</span>
               </span>
-            </span>
+              <ArrowUpRight className="agrid__cell-go" size={15} weight="bold" aria-hidden="true" />
+            </Link>
 
             <span className="agrid__cell">
               <span className="agrid__cell-mark">
@@ -124,19 +129,6 @@ export default function AboutGrid() {
                 <span className="agrid__cell-meta">Timezone · working hours</span>
               </span>
             </span>
-
-            {/* PLACEHOLDER - no v4 equivalent for a community/affiliation link; left as the
-                template's own placeholder rather than inventing one. */}
-            <a className="agrid__cell agrid__cell--wide" href="#">
-              <span className="agrid__cell-mark agrid__cell-mark--plain">
-                <img src="/placeholders/logo.svg" alt="" loading="lazy" decoding="async" />
-              </span>
-              <span className="agrid__cell-copy">
-                <span className="agrid__cell-title">Community or affiliation</span>
-                <span className="agrid__cell-meta">Your role there</span>
-              </span>
-              <ArrowUpRight className="agrid__cell-go" size={15} weight="bold" aria-hidden="true" />
-            </a>
           </div>
         </div>
 
