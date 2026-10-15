@@ -68,7 +68,7 @@ const TILES = [
   { n: '02', label: 'Skills & Experience', to: '/services', title: "What I bring. How I've applied it.", desc: "Years of fixing things by hand, then building so I don't have to.", chips: true, dark: true },
   { n: '03', label: 'Showcase', to: '/showcase', title: 'PLACEHOLDER - your flagship', desc: 'Tell me what to put here.', Icon: Coffee, dark: true, accent: true },
   { n: '04', label: 'Testimonials', to: '/testimonials', title: 'PLACEHOLDER - testimonials headline', desc: 'Tell me what to put here.', img: '/placeholders/testimonial-1.jpg' },
-  { n: '05', label: 'About', to: '/about', title: `Hi, I'm ${profile.firstName}.`, desc: 'PLACEHOLDER - one line about you.', img: profile.avatarSrc },
+  { n: '05', label: 'About', to: '/about', title: `Hi, I'm ${profile.firstName}.`, desc: "I find what's broken before it breaks everyone else's day.", img: profile.avatarSrc },
 ] as const
 
 // Numbers follow what is actually shown, so hiding a tile never leaves a gap (01, 02, 05).
