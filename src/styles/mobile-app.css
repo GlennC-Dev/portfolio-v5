@@ -255,6 +255,21 @@
     text-transform: uppercase;
   }
   .htile__img { display: block; width: 100%; height: 170px; object-fit: cover; object-position: top; }
+  /* Skills tile: two chip rows, drifting on their own (there is no hover on a phone). */
+  .htile__chips {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    height: 170px;
+    box-sizing: border-box;
+    padding-top: 44px;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .htile__chips .bento__chip-track { animation-play-state: running; animation-duration: 40s; }
+  .htile__chips .bento__chip { font-size: 12.5px; height: 32px; }
   .htile__glyph { display: grid; place-items: center; height: 170px; color: var(--orange); }
   .htile__body { padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; }
   .htile__title { font-size: 16px; font-weight: 700; line-height: 1.2; }

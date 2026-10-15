@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
-import { SealCheck, ArrowUpRight, Play, Stack, Coffee } from '@/components/slab'
+import { SealCheck, ArrowUpRight, Play, Coffee, Briefcase, Medal } from '@/components/slab'
 import { profile } from '@/data/profile'
 import { isHiddenView } from '@/data/hiddenViews'
+import { mainExperience, hiddenExperience } from '@/data/experience'
+import { CERTIFICATIONS } from '@/data/certifications'
 import ThemeButton from './ThemeButton'
 
 /**
@@ -45,9 +47,25 @@ export function HomeStats() {
   )
 }
 
+// Skills & Experience tile: two chip rows drifting against each other, built from
+// the same records the Skills page renders, so the names always match.
+const pick = <T,>(list: T[], key: (x: T) => string, names: string[]) =>
+  names.map((n) => list.find((x) => key(x) === n)).filter((x): x is T => Boolean(x))
+const ROLE_CHIPS = pick(
+  [...mainExperience, ...hiddenExperience],
+  (e) => e.role,
+  ['Reports and Automation Specialist', 'Operational Business Insights Analyst', 'Project Specialist'],
+).map((e) => ({ name: e.role, Icon: Briefcase }))
+const CRED_CHIPS = pick(
+  CERTIFICATIONS,
+  (c) => c.name,
+  ['Lean Six Sigma Yellow Belt', 'Lean Six Sigma Green Belt', 'Python Mastery', 'SQL Basics'],
+).map((c) => ({ name: c.name, Icon: Medal }))
+const SKILLS_CHIP_ROWS = [ROLE_CHIPS, CRED_CHIPS]
+
 const TILES = [
   { n: '01', label: 'Projects', to: '/projects', title: 'Every solution shipped.', desc: 'What it solved, how it works, and what came out the other end.', img: '/project-photos/thumbs/projects_tile_mobile.jpg' },
-  { n: '02', label: 'Skills & Experience', to: '/services', title: "What I bring. How I've applied it.", desc: 'Backed by years of actually being the one who had to fix things by hand.', Icon: Stack, dark: true },
+  { n: '02', label: 'Skills & Experience', to: '/services', title: "What I bring. How I've applied it.", desc: "Years of fixing things by hand, then building so I don't have to.", chips: true, dark: true },
   { n: '03', label: 'Showcase', to: '/showcase', title: 'PLACEHOLDER - your flagship', desc: 'Tell me what to put here.', Icon: Coffee, dark: true, accent: true },
   { n: '04', label: 'Testimonials', to: '/testimonials', title: 'PLACEHOLDER - testimonials headline', desc: 'Tell me what to put here.', img: '/placeholders/testimonial-1.jpg' },
   { n: '05', label: 'About', to: '/about', title: `Hi, I'm ${profile.firstName}.`, desc: 'PLACEHOLDER - one line about you.', img: profile.avatarSrc },
@@ -70,6 +88,21 @@ export function HomeExplore() {
               <span className="htile__n">{String(i + 1).padStart(2, '0')} {t.label}</span>
               {'img' in t ? (
                 <img className="htile__img" src={t.img} alt="" loading="lazy" />
+              ) : 'chips' in t ? (
+                <span className="htile__chips" aria-hidden="true">
+                  {SKILLS_CHIP_ROWS.map((row, r) => (
+                    <span key={r} className="bento__chip-row" data-dir={r ? 'right' : 'left'}>
+                      <span className="bento__chip-track">
+                        {Array.from({ length: 4 }, () => row).flat().map((c, i) => (
+                          <span key={`${c.name}-${i}`} className="bento__chip">
+                            <c.Icon size={15} weight="duotone" />
+                            {c.name}
+                          </span>
+                        ))}
+                      </span>
+                    </span>
+                  ))}
+                </span>
               ) : (
                 <span className="htile__glyph"><t.Icon size={52} weight="duotone" aria-hidden="true" /></span>
               )}
