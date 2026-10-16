@@ -2,80 +2,124 @@ import { useEffect, useRef, useState } from 'react'
 import { profile } from '@/data/profile'
 
 /**
- * IntroOverlay - "the workflow writes the line".
+ * IntroOverlay - "probe, build, automate".
  *
- * The site's own pitch is "One trigger fires. Everything else runs itself.", so
- * the intro is a workflow execution, drawn the way n8n draws one: a half-pill
- * trigger node, square step nodes, thin grey connectors, and the run streaming
- * through them left to right. Each node lights as the execution reaches it and
- * earns a green check; the headline is written by the same progress, one word
- * rising per stretch of cable.
+ * A radial instrument that does what the work does, in three beats:
  *
- *   Ignition  0.00-0.30  nodes and cables draw in
- *   Run       0.30-1.90  the execution streams the cables; nodes succeed as it
- *                        passes; words mask-reveal on the same progress value
- *   Lock      1.90-2.25  the last node succeeds, the status flips to done
- *   Handoff   2.25-3.15  the canvas falls away, the headline FLIES onto the
- *                        real `.home__title` rect at scale 1, and the page
- *                        assembles around it
+ *   Probe     0.00-0.75  a radar sweep finds what is broken (orange = flagged)
+ *   Build     0.75-1.50  one pulse leaves the hub and crosses the whole page.
+ *                        The solid ring detects, including what nobody asked
+ *                        for; the dashed ring 150ms behind fixes it. Bars grow
+ *                        and spokes draw while it travels.
+ *   Automate  1.50-2.10  the system runs one lap by itself
+ *   Handoff   2.10-3.15  the instrument tightens away, the headline rises word
+ *                        by word, then FLIES onto the real `.home__title` rect
+ *                        at scale 1, and the page assembles around it
+ *
+ * Plays once per visit (sessionStorage), never for reduced motion, never off
+ * the home route. There is deliberately no skip control: at ~3s nobody would
+ * find it in time.
  *
  * The overlay paints no backdrop. `html.is-intro` (set at module load, before
  * React's first paint) hides the page instead, so the contour shader drifts
  * behind the whole sequence.
  *
- * No animation library: Web Animations API for the keyframed parts and one rAF
- * loop for the progress-driven parts. Transform, opacity and stroke-dashoffset
- * only - nothing here touches layout.
+ * Everything is a pure function of elapsed time, driven by one rAF loop, and
+ * only transform / opacity / stroke-dashoffset change.
  */
+
+const T = {
+  probeEnd: 750,
+  buildEnd: 1500,
+  wordsStart: 2100,
+  flyStart: 2600,
+  flyEnd: 3150,
+  pageStart: 2900, // the rest of the page is handed back here
+}
+
+const PULSE = { start: 780, dur: 620, trail: 150 }
+const SEEN_KEY = 'intro-seen'
+const WARN = '#FF7A1A'
+
+const PHASES = ['Probe', 'Build', 'Automate'] as const
+const CAPTIONS = [
+  'Scanning for what is broken.',
+  'Building it, and catching what nobody asked for.',
+  'Letting it run on its own.',
+] as const
+
+const clamp = (x: number, a = 0, b = 1) => Math.min(b, Math.max(a, x))
+const seg = (t: number, a: number, b: number) => clamp((t - a) / (b - a))
+const easeOut = (x: number) => 1 - Math.pow(1 - x, 3)
+const easeOutBack = (x: number) => {
+  const c = 1.70158
+  return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2)
+}
+const easeInOut = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2)
+const invEaseOut = (y: number) => 1 - Math.pow(1 - clamp(y), 1 / 3)
+const lerp = (a: number, b: number, x: number) => a + (b - a) * x
+const frac = (x: number) => x - Math.floor(x)
+const pol = (deg: number, r: number): [number, number] => {
+  const a = (deg * Math.PI) / 180
+  return [r * Math.sin(a), -r * Math.cos(a)]
+}
+const hexRgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))
+const mix = (c1: string, c2: string, x: number) => {
+  const a = hexRgb(c1)
+  const b = hexRgb(c2)
+  return `rgb(${a.map((v, i) => Math.round(lerp(v, b[i], x))).join(',')})`
+}
+
+const NS = 'http://www.w3.org/2000/svg'
+const svgEl = <K extends keyof SVGElementTagNameMap>(
+  name: K,
+  attrs: Record<string, string | number> = {},
+  parent?: Element,
+) => {
+  const n = document.createElementNS(NS, name)
+  for (const k in attrs) n.setAttribute(k, String(attrs[k]))
+  parent?.appendChild(n)
+  return n
+}
 
 const WORDS = `${profile.displayName.line1} ${profile.displayName.line2}`.split(' ')
 
-const IGNITE_MS = 300
-const RUN_MS = 1600
-const LOCK_MS = 350
-const FLY_MS = 900
-
-/** Design units for the canvas, before the shared scale is applied. */
-const NODE = 40
-const CANVAS_H = 96
-const NODE_Y = 34
-
-const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)'
-const EASE_SPRING = 'cubic-bezier(0.34, 1.56, 0.64, 1)'
-const EASE_CAMERA = 'cubic-bezier(0.76, 0, 0.24, 1)'
-
-const easeInOut = (t: number) =>
-  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
-
-/** The four steps of the run. Icons are Tabler outlines, 24-unit grid. */
-const STEPS = [
-  { label: 'Lead comes in', trigger: true, d: 'M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11' },
-  { label: 'Tag & route', trigger: false, d: 'M4 4m0 2a2 2 0 0 1 2 -2h4.5a2 2 0 0 1 1.4 .6l7 7a2 2 0 0 1 0 2.8l-4.5 4.5a2 2 0 0 1 -2.8 0l-7 -7a2 2 0 0 1 -.6 -1.4v-4.5M8 8h.01' },
-  { label: 'Follow up', trigger: false, d: 'M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10M3 7l9 6l9 -6' },
-  { label: 'Call booked', trigger: false, d: 'M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12M16 3v4M8 3v4M4 11h16M9 16l2 2l4 -4' },
-] as const
+const seenAlready = () => {
+  try {
+    return window.sessionStorage.getItem(SEEN_KEY) === '1'
+  } catch {
+    return false
+  }
+}
 
 const shouldRun =
   typeof window !== 'undefined' &&
   !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
-  window.location.pathname === '/'
+  window.location.pathname === '/' &&
+  !seenAlready()
 
 // Two classes, because the page and the headline are handed back at different
 // moments: `is-intro` holds the whole page, `is-intro-head` holds only the real
 // headline, which must stay hidden until the flying clone has landed on it.
-if (shouldRun) document.documentElement.classList.add('is-intro', 'is-intro-head')
+if (shouldRun) {
+  document.documentElement.classList.add('is-intro', 'is-intro-head')
+  try {
+    window.sessionStorage.setItem(SEEN_KEY, '1')
+  } catch {
+    /* private mode: the intro just plays again next load */
+  }
+}
 
 const release = () => document.documentElement.classList.remove('is-intro')
 const releaseHead = () => document.documentElement.classList.remove('is-intro-head')
 
 export default function IntroOverlay() {
   const [gone, setGone] = useState(!shouldRun)
-  const titleRef = useRef<HTMLDivElement>(null)
-  const canvasRef = useRef<HTMLDivElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
-  const dotRef = useRef<HTMLElement>(null)
-  const dotCoreRef = useRef<HTMLElement>(null)
-  const statusRef = useRef<HTMLSpanElement>(null)
+  const stepsRef = useRef<HTMLDivElement>(null)
+  const captionRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!shouldRun) {
@@ -88,13 +132,12 @@ export default function IntroOverlay() {
     // remounts in dev, and the first unmount's cleanup releases the class.
     document.documentElement.classList.add('is-intro', 'is-intro-head')
 
-    const title = titleRef.current
-    const canvas = canvasRef.current
+    const stage = stageRef.current
     const svg = svgRef.current
-    const dot = dotRef.current
-    const dotCore = dotCoreRef.current
-    const status = statusRef.current
-    if (!title || !canvas || !svg || !dot || !dotCore || !status) {
+    const stepsWrap = stepsRef.current
+    const caption = captionRef.current
+    const title = titleRef.current
+    if (!stage || !svg || !stepsWrap || !caption || !title) {
       release()
       releaseHead()
       setGone(true)
@@ -103,244 +146,304 @@ export default function IntroOverlay() {
 
     let cancelled = false
     let raf = 0
-    const timers: number[] = []
-    const anims: Animation[] = []
-    const wait = (ms: number) =>
-      new Promise<void>((res) => timers.push(window.setTimeout(res, ms)))
-    const play = (el: Element, frames: Keyframe[], opts: KeyframeAnimationOptions) => {
-      const a = el.animate(frames, { fill: 'both', ...opts })
-      anims.push(a)
-      return a
-    }
 
     const run = async () => {
       if (document.fonts?.ready) await document.fonts.ready
       if (cancelled) return
 
-      // Phones get the same sequence at two-thirds speed: a thumb is waiting.
-      const k = window.innerWidth < 1100 ? 0.62 : 1
-      const IGNITE = IGNITE_MS * k, RUN = RUN_MS * k, LOCK = LOCK_MS * k, FLY = FLY_MS * k
-
-      const target = document.querySelector<HTMLElement>('.home__title')
-      const t = target?.getBoundingClientRect()
-
-      // Match the landing width exactly, so scale 1 IS the final layout.
-      const width = t?.width ?? Math.min(760, window.innerWidth * 0.86)
-      title.style.width = `${width}px`
-      canvas.style.width = `${width}px`
-      canvas.style.height = `${CANVAS_H}px`
-
-      const height = t?.height ?? title.offsetHeight
-      const scale = Math.min((window.innerWidth * 0.86) / width, 2.6)
-      const w = width * scale
-      const h = height * scale
-      const sx = (window.innerWidth - w) / 2
-      const sy = (window.innerHeight - h) / 2 - Math.min(96, window.innerHeight * 0.09)
-
-      const restTransform = `translate(${sx}px, ${sy}px) scale(${scale})`
-      const canvasTransform = `translate(${sx}px, ${sy + h + 44 * scale}px) scale(${scale})`
-      title.style.transform = restTransform
-      canvas.style.transform = canvasTransform
-      title.style.opacity = '1'
-      canvas.style.opacity = '1'
-
-      // ---- Lay the nodes out on the design canvas ----
-      // Node k sits with its centre at xs[k]; the run travels xs[0] -> xs[3].
-      const nodeEls = Array.from(canvas.querySelectorAll<HTMLElement>('.boot__n'))
-      const n = nodeEls.length
-      const xs = nodeEls.map((_, k) => NODE / 2 + (k * (width - NODE)) / (n - 1))
-      nodeEls.forEach((el, k) => {
-        el.style.left = `${xs[k] - NODE / 2}px`
-        el.style.top = `${NODE_Y - NODE / 2}px`
-      })
-
-      // Cables: one grey base path per gap, and one accent path on top whose
-      // dashoffset the run pays out. n8n draws these as gentle beziers.
-      svg.setAttribute('viewBox', `0 0 ${width} ${CANVAS_H}`)
-      svg.setAttribute('width', String(width))
-      svg.setAttribute('height', String(CANVAS_H))
-      const NS = 'http://www.w3.org/2000/svg'
-      svg.replaceChildren()
-      const cables: { live: SVGPathElement; len: number; from: number; to: number }[] = []
-      for (let k = 0; k < n - 1; k++) {
-        const x1 = xs[k] + NODE / 2
-        const x2 = xs[k + 1] - NODE / 2
-        const cx = (x2 - x1) * 0.5
-        const d = `M ${x1} ${NODE_Y} C ${x1 + cx} ${NODE_Y}, ${x2 - cx} ${NODE_Y}, ${x2} ${NODE_Y}`
-        const base = document.createElementNS(NS, 'path')
-        base.setAttribute('d', d)
-        base.setAttribute('class', 'boot__cable')
-        const live = document.createElementNS(NS, 'path')
-        live.setAttribute('d', d)
-        live.setAttribute('class', 'boot__cable boot__cable--live')
-        svg.append(base, live)
-        const len = live.getTotalLength()
-        live.style.strokeDasharray = `${len}`
-        live.style.strokeDashoffset = `${len}`
-        cables.push({ live, len, from: x1, to: x2 })
-        // The cable draws in with the ignition, base first.
-        play(base, [{ opacity: 0 }, { opacity: 1 }], {
-          duration: 420,
-          delay: 90 + k * 70,
-          easing: EASE_OUT,
-        })
+      const css = getComputedStyle(document.documentElement)
+      const hexVar = (name: string, fallback: string) => {
+        const v = css.getPropertyValue(name).trim()
+        return /^#[0-9a-f]{6}$/i.test(v) ? v : fallback
       }
+      const NAVY = hexVar('--navy', '#0B1E3F')
+      const BLUE = hexVar('--orange', '#1A62FF') // the site's accent token
 
-      // Words: flex swallows the literal spaces, so the column gap is one
-      // measured space and the row is allowed to wrap. Same width, same face,
-      // same gap as the real headline, so it breaks on the same words - on a
-      // phone that is two lines, and the flight lands on the same shape.
+      /* ---------------- headline: same machinery as before ---------------- */
+      const target = document.querySelector<HTMLElement>('.home__title')
+      const tr = target?.getBoundingClientRect()
+      const width = tr?.width ?? Math.min(760, window.innerWidth * 0.86)
+      title.style.width = `${width}px`
+      title.style.transform = 'none'
       const wordEls = Array.from(title.querySelectorAll<HTMLElement>('.boot__word'))
+      const wordIn = wordEls.map((w) => w.querySelector<HTMLElement>('.boot__word-in'))
+
+      // Flex swallows the literal spaces, so the column gap is one measured
+      // space and the row is allowed to wrap (see boot.css).
       const probe = document.createElement('span')
       probe.className = 'boot__word'
       probe.textContent = ' '
       title.append(probe)
-      const space = probe.getBoundingClientRect().width / scale
+      const space = probe.getBoundingClientRect().width
       probe.remove()
-      // One line: distribute the leftover exactly as the real headline does,
-      // which absorbs sub-pixel rounding that would otherwise force a wrap.
-      // More than one line: a natural space, and the row wraps like the h1.
-      const inked = wordEls.reduce((sum, el) => sum + el.getBoundingClientRect().width, 0) / scale
+      const inked = wordEls.reduce((sum, el) => sum + el.getBoundingClientRect().width, 0)
       const fits = inked + (wordEls.length - 1) * space <= width + 0.5
       title.style.columnGap = `${fits ? Math.max(0, (width - inked) / (wordEls.length - 1)) : space}px`
-      // Reveal in reading order, spread across the run.
-      const gates = wordEls.map((el, k) => ({
-        inner: el.querySelector<HTMLElement>('.boot__word-in'),
-        at: k / wordEls.length,
-        done: false,
-      }))
 
-      // ---- Ignition: nodes pop in, left to right ----
-      nodeEls.forEach((el, k) => {
-        play(
-          el,
-          [
-            { opacity: 0, transform: 'translateY(8px) scale(0.86)' },
-            { opacity: 1, transform: 'translateY(0) scale(1)' },
-          ],
-          { duration: 520, delay: k * 70, easing: EASE_SPRING },
-        )
-      })
-      play(
-        dotCore,
-        [
-          { opacity: 0, transform: 'scale(0.2)' },
-          { opacity: 1, transform: 'scale(1)' },
-        ],
-        { duration: 320, delay: 200, easing: EASE_SPRING },
+      const height = tr?.height ?? title.offsetHeight
+      const s0 = Math.min(1.3, (window.innerWidth * 0.88) / width)
+      const sx = (window.innerWidth - width * s0) / 2
+      const sy = (window.innerHeight - height * s0) / 2 - 10
+      title.style.opacity = '1'
+
+      /* ---------------- the radial ---------------- */
+      svg.replaceChildren()
+      const root = svgEl('g', {}, svg)
+      const track = svgEl('circle', { r: 202, fill: 'none', stroke: NAVY, 'stroke-opacity': 0.07, 'stroke-width': 2 }, root)
+      const sys = svgEl('g', {}, root)
+
+      const rings = [70, 130, 190].map((r) =>
+        svgEl('circle', { r, fill: 'none', stroke: NAVY, 'stroke-opacity': 0.11, 'stroke-width': 1.25 }, sys),
       )
-      play(status, [{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }], {
-        duration: 420,
-        delay: 160,
-        easing: EASE_OUT,
+      const cross = [0, 90].map((a) => {
+        const [x, y] = pol(a, 196)
+        return svgEl('line', { x1: -x, y1: -y, x2: x, y2: y, stroke: NAVY, 'stroke-opacity': 0.07, 'stroke-width': 1 }, sys)
       })
-      await wait(IGNITE)
-      if (cancelled) return
 
-      // ---- The run: one progress value drives cables, dot, nodes and words ----
-      const x0 = xs[0]
-      const x1 = xs[n - 1]
-      const nodeAt = xs.map((x) => (x - x0) / (x1 - x0))
-      const nodeDone = nodeEls.map(() => false)
-      const succeed = (k: number) => {
-        nodeDone[k] = true
-        const el = nodeEls[k]
-        el.classList.add('is-done')
-        const badge = el.querySelector<HTMLElement>('.boot__n-check')
-        if (badge) {
-          play(
-            badge,
-            [
-              { opacity: 0, transform: 'scale(0.3)' },
-              { opacity: 1, transform: 'scale(1)' },
-            ],
-            { duration: 460, easing: EASE_SPRING },
-          )
-        }
-        const card = el.querySelector<HTMLElement>('.boot__n-card')
-        if (card) {
-          play(card, [{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }, { transform: 'scale(1)' }], {
-            duration: 420,
-            easing: EASE_OUT,
-          })
-        }
+      // radial bars: the thing that gets "built"
+      const BARS = 36
+      const bars = Array.from({ length: BARS }, (_, i) => {
+        const len = 20 + 44 * (0.5 + 0.5 * Math.sin(i * 1.7) * Math.cos(i * 0.45 + 1))
+        const ang = i * (360 / BARS) + 360 / BARS / 2
+        const ln = svgEl('line', { stroke: BLUE, 'stroke-width': 6, 'stroke-linecap': 'round', 'stroke-opacity': i % 2 ? 0.45 : 0.9 }, sys)
+        return { ln, len, ang, delay: i * 10 }
+      })
+
+      // nodes found by the probe: [angle, radius, flagged]
+      const checkD = 'M-3.2 .2 L-.9 2.6 L3.4 -2.4'
+      const NODES = (
+        [
+          [20, 130, 0], [75, 190, 1], [120, 70, 0], [155, 190, 0], [200, 130, 1],
+          [240, 70, 0], [275, 190, 0], [310, 130, 1], [345, 190, 0],
+        ] as const
+      ).map(([a, r, flag], i) => {
+        const [x, y] = pol(a, r)
+        const spoke = svgEl('line', { x1: 0, y1: 0, x2: x, y2: y, stroke: NAVY, 'stroke-opacity': 0.28, 'stroke-width': 1.25 }, sys)
+        const len = Math.hypot(x, y)
+        spoke.setAttribute('stroke-dasharray', String(len))
+        spoke.setAttribute('stroke-dashoffset', String(len))
+        const g = svgEl('g', { transform: `translate(${x} ${y})` }, sys)
+        const ping = svgEl('circle', { r: 4, fill: 'none', stroke: flag ? WARN : NAVY, 'stroke-width': 1.5, opacity: 0 }, g)
+        const core = svgEl('circle', { r: 0, fill: flag ? WARN : NAVY }, g)
+        const check = svgEl('path', { d: checkD, fill: 'none', stroke: '#fff', 'stroke-width': 1.9, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: 0 }, g)
+        return { a, flag: !!flag, spoke, len, ping, core, check, i }
+      })
+
+      // the probe sweep: a leading line with a fading trail, kept inside the ring
+      const defs = svgEl('defs', {}, svg)
+      const grad = svgEl('radialGradient', { id: 'boot-sw', gradientUnits: 'userSpaceOnUse', cx: 0, cy: 0, r: 196 }, defs)
+      svgEl('stop', { offset: 0, 'stop-color': BLUE, 'stop-opacity': 1 }, grad)
+      svgEl('stop', { offset: 1, 'stop-color': BLUE, 'stop-opacity': 0.35 }, grad)
+      const sweep = svgEl('g', {}, root)
+      const WEDGES = 18
+      const STEP = 2.6
+      const SR = 196
+      for (let i = 0; i < WEDGES; i++) {
+        const [x0, y0] = pol(-(i + 1) * STEP, SR)
+        const [x1, y1] = pol(-i * STEP, SR)
+        svgEl('path', {
+          d: `M0 0 L${x0} ${y0} A${SR} ${SR} 0 0 1 ${x1} ${y1} Z`,
+          fill: 'url(#boot-sw)',
+          'fill-opacity': 0.26 * Math.pow(1 - i / WEDGES, 1.4),
+        }, sweep)
       }
-      succeed(0)
+      svgEl('line', { x1: 0, y1: 0, x2: 0, y2: -SR, stroke: BLUE, 'stroke-width': 1.75, 'stroke-linecap': 'round' }, sweep)
 
-      await new Promise<void>((res) => {
-        const start = performance.now()
-        const step = (now: number) => {
-          if (cancelled) return res()
-          const raw = Math.min(1, (now - start) / RUN)
-          const p = easeInOut(raw)
-          const x = x0 + p * (x1 - x0)
+      // the pulse: a soft halo, a crisp detecting ring, a dashed fixing ring
+      const ne = { fill: 'none', 'vector-effect': 'non-scaling-stroke' }
+      const pulseG = svgEl('g', {}, root)
+      root.insertBefore(pulseG, sweep)
+      const pSoft = svgEl('circle', { ...ne, r: 0, stroke: BLUE, 'stroke-width': 16, opacity: 0 }, pulseG)
+      const pFront = svgEl('circle', { ...ne, r: 0, stroke: BLUE, 'stroke-width': 2, opacity: 0 }, pulseG)
+      const pTrail = svgEl('circle', { ...ne, r: 0, stroke: BLUE, 'stroke-width': 1.25, 'stroke-dasharray': '3 5', opacity: 0 }, pulseG)
 
-          dot.style.transform = `translate3d(${x}px, ${NODE_Y}px, 0)`
+      const orbit = svgEl('circle', { r: 202, fill: 'none', stroke: BLUE, 'stroke-width': 3, 'stroke-linecap': 'round', transform: 'rotate(-90)', pathLength: 100 }, root)
+      const orbitDot = svgEl('circle', { r: 6, fill: BLUE }, root)
+      const hub = svgEl('circle', { r: 5, fill: BLUE }, root)
+      const hubPing = svgEl('circle', { r: 5, fill: 'none', stroke: BLUE, 'stroke-width': 1.5 }, root)
 
-          for (const c of cables) {
-            const f = Math.min(1, Math.max(0, (x - c.from) / (c.to - c.from)))
-            c.live.style.strokeDashoffset = `${c.len * (1 - f)}`
-          }
-          for (let k = 1; k < n - 1; k++) {
-            if (!nodeDone[k] && p >= nodeAt[k]) succeed(k)
-          }
-          for (const g of gates) {
-            if (!g.done && p >= g.at && g.inner) {
-              g.done = true
-              play(
-                g.inner,
-                [{ transform: 'translateY(132%)' }, { transform: 'translateY(0)' }],
-                { duration: 760, easing: EASE_OUT },
-              )
-            }
-          }
-
-          if (raw < 1) raf = requestAnimationFrame(step)
-          else res()
-        }
-        raf = requestAnimationFrame(step)
-      })
-      if (cancelled) return
-
-      // ---- Lock: the last node succeeds, the run reports done ----
-      play(dotCore, [{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'linear' })
-      succeed(n - 1)
-      status.classList.add('is-done')
-      const label = status.querySelector<HTMLElement>('.boot__status-text')
-      if (label) label.textContent = 'Workflow executed successfully'
-      await wait(LOCK)
-      if (cancelled) return
-
-      // ---- Handoff: the canvas falls away, the headline flies home ----
-      play(
-        canvas,
-        [
-          { transform: canvasTransform, opacity: 1 },
-          { transform: `translate(${sx}px, ${sy + h + 72 * scale}px) scale(${scale})`, opacity: 0 },
-        ],
-        { duration: 420, easing: EASE_OUT },
-      )
-      if (t) {
-        play(
-          title,
-          [
-            { transform: restTransform },
-            { transform: `translate(${t.left}px, ${t.top}px) scale(1)` },
-          ],
-          { duration: FLY, easing: EASE_CAMERA },
-        )
-      } else {
-        play(title, [{ opacity: 1 }, { opacity: 0 }], { duration: 420, easing: EASE_OUT })
+      /* ---------------- what nobody asked for ----------------
+         Scattered across the whole viewport, away from the ring, the caption
+         and the step labels. Every third one is a flagged need. */
+      const rect = svg.getBoundingClientRect()
+      const k = rect.width / 600 // px per svg unit
+      const c = [rect.left + rect.width / 2, rect.top + rect.height / 2]
+      const RFULL =
+        Math.max(
+          ...[[0, 0], [window.innerWidth, 0], [0, window.innerHeight], [window.innerWidth, window.innerHeight]].map(
+            ([x, y]) => Math.hypot(x - c[0], y - c[1]),
+          ),
+        ) / k + 24
+      const kr = [stepsWrap, caption].map((e) => e.getBoundingClientRect())
+      const keep = {
+        l: Math.min(...kr.map((r) => r.left)) - 30,
+        r: Math.max(...kr.map((r) => r.right)) + 30,
+        t: Math.min(...kr.map((r) => r.top)) - 26,
+        b: Math.max(...kr.map((r) => r.bottom)) + 26,
+      }
+      const EXTRAS: { ping: SVGElement; core: SVGElement; check: SVGElement; r: number; flag: boolean; n: number }[] = []
+      const placed: [number, number][] = []
+      const hash = (i: number) => frac(Math.sin(i * 12.9898 + 4.1414) * 43758.5453)
+      const MIN_GAP = Math.max(90, Math.min(window.innerWidth, window.innerHeight) * 0.16)
+      for (let n = 0, guard = 0; n < 20 && guard < 600; ) {
+        guard++
+        const px = window.innerWidth * (0.05 + 0.9 * hash(guard * 2 + 1))
+        const py = window.innerHeight * (0.07 + 0.72 * hash(guard * 2 + 2))
+        if (placed.some(([qx, qy]) => Math.hypot(qx - px, qy - py) < MIN_GAP)) continue
+        if (px > keep.l && px < keep.r && py > keep.t && py < keep.b) continue
+        const x = (px - c[0]) / k
+        const y = (py - c[1]) / k
+        const r = Math.hypot(x, y)
+        if (r < 320) continue
+        placed.push([px, py])
+        const flag = n % 3 === 0
+        const g = svgEl('g', { transform: `translate(${x} ${y})` }, sys)
+        const ping = svgEl('circle', { r: 4, fill: 'none', stroke: flag ? WARN : BLUE, 'stroke-width': 1.5, opacity: 0 }, g)
+        const core = svgEl('circle', { r: 0, fill: flag ? WARN : NAVY }, g)
+        const check = svgEl('path', { d: checkD, fill: 'none', stroke: '#fff', 'stroke-width': 1.9, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: 0 }, g)
+        EXTRAS.push({ ping, core, check, r, flag, n })
+        n++
       }
 
-      await wait(FLY - 150)
-      if (cancelled) return
-      release()
+      const stepEls = Array.from(stepsWrap.querySelectorAll<HTMLElement>('.boot__step'))
 
-      await wait(150)
-      if (cancelled) return
-      releaseHead()
-      setGone(true)
+      /* ---------------- render(t): a pure function of time ---------------- */
+      const render = (t: number) => {
+        // ring system draws in, then turns once the build is done
+        const ringIn = easeOut(seg(t, 0, 320))
+        rings.forEach((el, i) => {
+          el.setAttribute('opacity', String(ringIn))
+          el.setAttribute('transform', `scale(${lerp(0.82 + i * 0.02, 1, ringIn)})`)
+        })
+        cross.forEach((el) => el.setAttribute('opacity', String(ringIn)))
+        sys.setAttribute('transform', `rotate(${0.0001 * Math.pow(Math.max(0, t - T.buildEnd), 2)})`)
+
+        // resolve: the instrument tightens away
+        const away = easeInOut(seg(t, 2050, 2500))
+        root.setAttribute('opacity', String(1 - away))
+        root.setAttribute('transform', `scale(${lerp(1, 0.55, away)})`)
+        stage.style.opacity = String(1 - seg(t, 2400, 2650))
+
+        // hub
+        hub.setAttribute('r', String(4 + 1.5 * Math.sin(t / 120)))
+        hubPing.setAttribute('r', String(5 + 30 * ((t % 700) / 700)))
+        hubPing.setAttribute('opacity', String(t < T.probeEnd ? 0.6 * (1 - (t % 700) / 700) : 0))
+
+        // probe: one sweep around the ring
+        const sweepAng = 370 * easeInOut(seg(t, 0, T.probeEnd))
+        sweep.setAttribute('transform', `rotate(${sweepAng})`)
+        sweep.setAttribute('opacity', String(easeOut(seg(t, 0, 120)) * (1 - easeOut(seg(t, T.probeEnd, T.probeEnd + 160)))))
+
+        NODES.forEach((n) => {
+          const age = Math.min(sweepAng, 370) - n.a // degrees since the sweep passed
+          const shown = age > 0
+          const q = clamp(age / 55)
+          n.ping.setAttribute('r', String(4 + 22 * easeOut(q)))
+          n.ping.setAttribute('opacity', String(shown ? 0.9 * (1 - q) : 0))
+
+          const sp = easeOut(seg(t, T.probeEnd + 30 + n.i * 28, T.probeEnd + 330 + n.i * 28))
+          n.spoke.setAttribute('stroke-dashoffset', String(n.len * (1 - sp)))
+          const fixT = seg(t, 1150 + n.i * 10, 1350 + n.i * 10)
+          const base = shown ? easeOutBack(clamp(age / 14)) : 0
+          let rad = (n.flag ? 5.5 : 3.6) * base
+          if (n.flag) rad = lerp(rad, 8, easeOut(fixT))
+          n.core.setAttribute('r', String(Math.max(0, rad)))
+          n.core.setAttribute('fill', n.flag ? mix(WARN, BLUE, fixT) : NAVY)
+          n.check.setAttribute('opacity', String(n.flag ? easeOut(seg(t, 1300 + n.i * 10, 1450 + n.i * 10)) : 0))
+        })
+
+        // build: one pulse crosses the page. Front detects, trailing ring fixes.
+        const maxR = RFULL
+        const rf = maxR * easeOut(seg(t, PULSE.start, PULSE.start + PULSE.dur))
+        const rt = maxR * easeOut(seg(t, PULSE.start + PULSE.trail, PULSE.start + PULSE.trail + PULSE.dur))
+        const fade = (a: number) => seg(t, a, a + 40) * (1 - seg(t, a + PULSE.dur * 0.7, a + PULSE.dur + 60))
+        const of = fade(PULSE.start)
+        const ot = fade(PULSE.start + PULSE.trail)
+        pFront.setAttribute('r', String(rf)); pFront.setAttribute('opacity', String(0.6 * of))
+        pSoft.setAttribute('r', String(rf)); pSoft.setAttribute('opacity', String(0.08 * of))
+        pTrail.setAttribute('r', String(rt)); pTrail.setAttribute('opacity', String(0.45 * ot))
+
+        EXTRAS.forEach((e) => {
+          const tHit = PULSE.start + PULSE.dur * invEaseOut(e.r / maxR)
+          const ms = t - tHit
+          const age = ms > 0 ? ms / 4.2 : -1
+          const fixT = seg(t, tHit + PULSE.trail, tHit + PULSE.trail + 180)
+          const chkT = seg(t, tHit + PULSE.trail + 120, tHit + PULSE.trail + 270)
+          const shown = age > 0
+          const q = clamp(age / 55)
+          e.ping.setAttribute('r', String(4 + 20 * easeOut(q)))
+          e.ping.setAttribute('opacity', String(shown ? 0.85 * (1 - q) : 0))
+          const base = shown ? easeOutBack(clamp(age / 14)) : 0
+          let rad = (e.flag ? 5 : 3.2) * base
+          if (e.flag) rad = lerp(rad, 7.5, easeOut(fixT))
+          e.core.setAttribute('r', String(Math.max(0, rad)))
+          e.core.setAttribute('fill', e.flag ? mix(WARN, BLUE, fixT) : NAVY)
+          e.check.setAttribute('opacity', String(e.flag ? easeOut(chkT) : 0))
+        })
+
+        // build: radial bars grow
+        bars.forEach((b) => {
+          const g = easeOut(seg(t, 880 + b.delay, 1260 + b.delay))
+          const [x0, y0] = pol(b.ang, 214)
+          const [x1, y1] = pol(b.ang, 214 + 0.01 + b.len * g)
+          b.ln.setAttribute('x1', String(x0)); b.ln.setAttribute('y1', String(y0))
+          b.ln.setAttribute('x2', String(x1)); b.ln.setAttribute('y2', String(y1))
+          b.ln.setAttribute('opacity', g > 0 ? '1' : '0')
+        })
+
+        // automate: one full lap by itself
+        const lap = easeInOut(seg(t, T.buildEnd, 2100))
+        const visible = String(easeOut(seg(t, T.buildEnd - 60, T.buildEnd + 80)))
+        track.setAttribute('opacity', visible)
+        orbit.setAttribute('opacity', visible)
+        orbit.setAttribute('stroke-dasharray', `${lap * 100} 100`)
+        const [ox, oy] = pol(lap * 360, 202)
+        orbitDot.setAttribute('cx', String(ox)); orbitDot.setAttribute('cy', String(oy))
+        orbitDot.setAttribute('opacity', visible)
+
+        // labels
+        const active = t < T.probeEnd ? 0 : t < T.buildEnd ? 1 : 2
+        stepEls.forEach((s, i) => {
+          s.classList.toggle('on', i === active)
+          s.classList.toggle('done', i < active)
+        })
+        if (caption.textContent !== CAPTIONS[active]) caption.textContent = CAPTIONS[active]
+
+        // headline: rises from the centre, then flies home
+        wordIn.forEach((w, i) => {
+          if (!w) return
+          const p = easeOut(seg(t, T.wordsStart + i * 40, T.wordsStart + i * 40 + 330))
+          w.style.transform = `translateY(${lerp(132, 0, p)}%)`
+        })
+        if (tr) {
+          const f = easeInOut(seg(t, T.flyStart, T.flyEnd))
+          title.style.transform = `translate(${lerp(sx, tr.left, f)}px, ${lerp(sy, tr.top, f)}px) scale(${lerp(s0, 1, f)})`
+        } else {
+          title.style.transform = `translate(${sx}px, ${sy}px) scale(${s0})`
+          title.style.opacity = String(1 - seg(t, T.flyStart, T.flyStart + 420))
+        }
+      }
+
+      render(0)
+      let pageReleased = false
+      const start = performance.now()
+      const frame = (now: number) => {
+        if (cancelled) return
+        const t = now - start
+        render(Math.min(t, T.flyEnd))
+        if (!pageReleased && t >= T.pageStart) {
+          pageReleased = true
+          release()
+        }
+        if (t < T.flyEnd) {
+          raf = requestAnimationFrame(frame)
+        } else {
+          release()
+          releaseHead()
+          setGone(true)
+        }
+      }
+      raf = requestAnimationFrame(frame)
     }
 
     void run()
@@ -348,8 +451,6 @@ export default function IntroOverlay() {
     return () => {
       cancelled = true
       cancelAnimationFrame(raf)
-      timers.forEach(clearTimeout)
-      anims.forEach((a) => a.cancel())
       release()
       releaseHead()
     }
@@ -359,43 +460,25 @@ export default function IntroOverlay() {
 
   return (
     <div className="boot" aria-hidden="true" role="presentation">
+      <div className="boot__stage" ref={stageRef}>
+        <svg className="boot__radial" ref={svgRef} viewBox="-300 -300 600 600" />
+        <div className="boot__steps" ref={stepsRef}>
+          {PHASES.map((p, i) => (
+            <span className="boot__step" key={p}>
+              <i>{`0${i + 1}`}</i>
+              {p}
+            </span>
+          ))}
+        </div>
+        <div className="boot__caption" ref={captionRef} />
+      </div>
+
       <div className="boot__title" ref={titleRef}>
         {WORDS.map((word, i) => (
           <span className="boot__word" key={`${word}-${i}`}>
             <span className="boot__word-in">{word}</span>
           </span>
         ))}
-      </div>
-
-      <div className="boot__canvas" ref={canvasRef}>
-        <svg className="boot__cables" ref={svgRef} />
-
-        {STEPS.map((s) => (
-          <span key={s.label} className={`boot__n${s.trigger ? ' boot__n--trigger' : ''}`}>
-            <span className="boot__n-card">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d={s.d} />
-              </svg>
-              <span className="boot__n-check">
-                <svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12l5 5l9 -10" />
-                </svg>
-              </span>
-              <i className="boot__n-port boot__n-port--in" />
-              <i className="boot__n-port boot__n-port--out" />
-            </span>
-            <span className="boot__n-label">{s.label}</span>
-          </span>
-        ))}
-
-        <i className="boot__dot" ref={dotRef}>
-          <i className="boot__dot-core" ref={dotCoreRef} />
-        </i>
-
-        <span className="boot__status" ref={statusRef}>
-          <i className="boot__status-dot" />
-          <span className="boot__status-text">Executing workflow</span>
-        </span>
       </div>
     </div>
   )

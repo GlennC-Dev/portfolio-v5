@@ -1,9 +1,9 @@
 /* ============================================
-   BOOT SEQUENCE - "the signal writes the line"
+   BOOT SEQUENCE - "probe, build, automate"
 
-   A signal fires, runs a rail, and the headline is revealed word by word as it
-   passes. At 100% the run locks into a terminal node and the headline flies
-   onto the real `.home__title`, which the page then assembles around.
+   A radial instrument probes, builds and automates, then resolves into the
+   headline, which rises word by word and flies onto the real `.home__title`,
+   which the page then assembles around.
 
    `.boot__title` must be typographically IDENTICAL to `.home__title`: the
    flight ends at scale 1 on the real headline's measured rect, so any
@@ -68,167 +68,62 @@
   will-change: transform;
 }
 
-/* ---------- The canvas ----------
-   An n8n execution in miniature: a half-pill trigger, square step nodes with
-   a port on each side, thin grey cables, and the run streaming the cables in
-   accent as it passes. Nodes earn a green check when the run clears them.
-   Everything is in design units and scaled with the headline. */
-.boot__canvas {
+/* ---------- The instrument ----------
+   A radial stage centred on the viewport: the SVG (rings, bars, nodes, the
+   pulse) with the three phase labels and a one-line caption under it. Colours
+   come from the site tokens, so it follows the theme. */
+.boot__stage {
   position: fixed;
-  top: 0;
-  left: 0;
-  transform-origin: 0 0;
-  opacity: 0;
-  will-change: transform;
-  --n8n-node: #FFFFFF;
-  --n8n-border: #C9CBD3;
-  --n8n-cable: #B4B7C0;
-  --n8n-ok: #22A15C;
-  --n8n-ink: var(--navy);
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2vh, 20px);
+  padding-bottom: 40px;
 }
-[data-theme='dark'] .boot__canvas {
-  --n8n-node: #414244;
-  --n8n-border: #5E5F63;
-  --n8n-cable: #6B6D73;
-  --n8n-ok: #3DBA74;
-  --n8n-ink: #EDF0F6;
-}
-
-.boot__cables {
-  position: absolute;
-  top: 0;
-  left: 0;
+.boot__radial {
+  width: min(66vmin, 520px);
+  height: min(66vmin, 520px);
   overflow: visible;
 }
-.boot__cable {
-  fill: none;
-  stroke: var(--n8n-cable);
-  stroke-width: 2;
-  stroke-linecap: round;
-  opacity: 0;
-}
-.boot__cable--live {
-  stroke: var(--orange);
-  opacity: 1;
-  filter: drop-shadow(0 0 4px rgba(255, 122, 26, 0.45));
-}
-
-.boot__n {
-  position: absolute;
-  width: 40px;
-  opacity: 0;
-  will-change: transform, opacity;
-}
-.boot__n-card {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 9px;
-  background: var(--n8n-node);
-  border: 1.5px solid var(--n8n-border);
-  color: var(--n8n-ink);
-  box-shadow: 0 6px 14px -8px rgba(6, 12, 26, 0.35);
-  transition: border-color 260ms var(--ease-out);
-}
-/* n8n's trigger tile: rounded on the input side, square on the output side. */
-.boot__n--trigger .boot__n-card {
-  border-radius: 20px 9px 9px 20px;
-}
-.boot__n.is-done .boot__n-card { border-color: var(--n8n-ok); }
-
-.boot__n-port {
-  position: absolute;
-  top: 50%;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--n8n-node);
-  border: 1.5px solid var(--n8n-border);
-  transform: translateY(-50%);
-}
-.boot__n-port--in  { left: -5px; }
-.boot__n-port--out { right: -5px; }
-.boot__n--trigger .boot__n-port--in { display: none; }
-.boot__n:last-of-type .boot__n-port--out { display: none; }
-.boot__n.is-done .boot__n-port { border-color: var(--n8n-ok); }
-
-.boot__n-check {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  display: grid;
-  place-items: center;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: var(--n8n-ok);
-  color: #fff;
-  box-shadow: 0 0 0 2px var(--n8n-node);
-  opacity: 0;
-  transform: scale(0.3);
-}
-
-.boot__n-label {
-  position: absolute;
-  top: 46px;
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  font-family: var(--font-display);
-  font-size: 8.5px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--n8n-ink);
-}
-
-/* The execution. Outer element travels (rAF), inner element pops (WAAPI). */
-.boot__dot {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  margin: -4px 0 0 -4px;
-  will-change: transform;
-}
-.boot__dot-core {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: var(--radius-circle);
-  background: var(--orange);
-  box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.18), 0 0 12px 2px rgba(255, 122, 26, 0.6);
-  opacity: 0;
-}
-
-/* Execution status, the way n8n reports it under the canvas. */
-.boot__status {
-  position: absolute;
-  left: 0;
-  top: 82px;
-  display: inline-flex;
+.boot__steps {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 8.5px;
+  gap: clamp(14px, 4vw, 40px);
+}
+.boot__step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--navy) 32%, transparent);
+  transition: color 250ms ease;
+}
+.boot__step i {
+  font-style: normal;
+  font-size: 10.5px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--navy) 16%, transparent);
+  transition: background 250ms ease, color 250ms ease, box-shadow 250ms ease;
+}
+.boot__step.on { color: var(--navy); }
+.boot__step.on i { background: var(--orange); color: #fff; box-shadow: none; }
+.boot__step.done { color: color-mix(in srgb, var(--navy) 55%, transparent); }
+.boot__step.done i {
+  color: var(--orange-ink, var(--orange));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--orange) 50%, transparent);
+}
+.boot__caption {
+  height: 20px;
+  font-size: 14px;
+  letter-spacing: 0.005em;
+  text-align: center;
   color: var(--muted);
-  opacity: 0;
-}
-.boot__status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--orange);
-  animation: boot-pulse 900ms ease-in-out infinite;
-}
-.boot__status.is-done { color: var(--n8n-ok); }
-.boot__status.is-done .boot__status-dot { background: var(--n8n-ok); animation: none; }
-@keyframes boot-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(0.6); opacity: 0.5; }
 }
 
 /* ---------- What the intro holds back ----------
@@ -295,7 +190,9 @@ html.is-intro .rail__inner > * {
 .rail__inner > *:nth-child(7) { transition-delay: 350ms; }
 
 @media (min-width: 1100px) {
-  .boot__title { white-space: nowrap; }
+  /* One line on desktop, like .home__line: never let sub-pixel rounding in the
+     computed word gap push the last word onto a second row. */
+  .boot__title { white-space: nowrap; flex-wrap: nowrap; }
 }
 
 @media (prefers-reduced-motion: reduce) {
