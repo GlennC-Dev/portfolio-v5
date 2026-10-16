@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /showcase
+Disallow: /testimonials
+Disallow: /privacy
+Disallow: /terms
+Disallow: /thank-you
+
+Sitemap: https://topgitconsulting.tech/sitemap.xml
