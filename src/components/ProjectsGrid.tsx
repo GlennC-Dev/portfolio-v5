@@ -1,8 +1,8 @@
 import { Fragment, useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { ArrowUpRight, X, Ticket, Robot, FlowArrow, CursorClick, ChartBar, FileText, Table } from '@/components/slab'
+import { ArrowUpRight, X, Ticket, Robot, AppWindow, CursorClick, ChartBar, FileText, Table } from '@/components/slab'
 import { FlowIcon, PlanIcon } from './ProjectIcons'
-import { AutomationsPanel, PlanPanel, TicketingPanel, FrameworkPanel, WorkflowPanel, BarrelPanel, AppScriptWindow, WritingWindow } from './ProjectPanels'
+import { WebAppsPanel, PlanPanel, TicketingPanel, FrameworkPanel, WorkflowPanel, BarrelPanel, AppScriptWindow, WritingWindow } from './ProjectPanels'
 import { DASHBOARDS } from '@/data/dataviz'
 import { WRITING } from '@/data/writing'
 import { APPSCRIPT } from '@/data/appscript'
@@ -44,16 +44,6 @@ const FILTERS: { key: Cat | 'all'; label: string }[] = [
   { key: 'ai', label: 'AI' },
 ]
 
-/** Example tool marks, from public/icons. Swap for what you build with. */
-const GHL = '/icons/gohighlevel.png'
-
-
-
-
-const WF_SHOTS = ['project-1.jpg', 'project-2.jpg', 'project-3.jpg', 'project-4.jpg'].map(
-  (f) => `/placeholders/${f}`,
-)
-
 // The card's fan: the first dashboard of the first three workbooks.
 const FUNNEL_SHOTS = DASHBOARDS.filter((d) => d.index === 0).slice(0, 3)
 
@@ -67,28 +57,13 @@ const DOC_SHOTS = WRITING.map((w) => w.shots[0].src)
 const BUILDS: Project[] = [
   { id: 'ticketing', cat: 'ai', index: '03', kicker: 'n8n · AI Automation', title: 'Daily Information Assistant', desc: 'A modular Telegram assistant combining AI intent routing, weather, news feeds, and Google Sheets finance.', Icon: () => <Ticket size={20} weight="duotone" />, logos: ['/icons/ai/n8n.svg', '/icons/ai/telegram.svg'], eyebrow: 'Featured build', Section: TicketingPanel, Preview: () => null },
   { id: 'framework', cat: 'ai', index: '04', kicker: 'n8n · LLM Grounding', title: 'AI-Driven Portfolio Chatbot', desc: 'A grounded portfolio assistant with modular resume context, full QA logging, and human escalation fallback.', Icon: () => <Robot size={20} weight="duotone" />, logos: ['/icons/ai/n8n.svg', '/icons/googleworkspace.svg'], eyebrow: 'Featured build', Section: FrameworkPanel, Preview: () => null },
-  { id: 'workflows', cat: 'work', index: '05', kicker: 'Screenshots', title: 'Project Title', desc: 'PLACEHOLDER - tell me what to put here: what these screens show.', Icon: () => <FlowArrow size={20} weight="duotone" />, logos: [GHL], eyebrow: 'Screenshots', Section: AutomationsPanel, Preview: () => null },
+  { id: 'workflows', cat: 'work', index: '05', kicker: 'React · Web Apps', title: 'Web Apps', desc: 'Small web apps built end to end, from a self-reflection hub to a guided troubleshooting form.', Icon: () => <AppWindow size={20} weight="duotone" />, eyebrow: 'Web apps', Section: WebAppsPanel, Preview: () => null },
 ]
 
 // The Apps Script card's reel: each project's cover.
 const APPSCRIPT_SHOTS = APPSCRIPT.map((p) => p.shots[0].src)
 
 /* ---------- Previews ---------- */
-
-export function WorkflowsPreview() {
-  return (
-    <div className="bento__media bento__reel" aria-hidden="true">
-      <div className="bento__reel-track">
-        {[...WF_SHOTS, ...WF_SHOTS].map((src, i) => (
-          <span key={i} className="bento__shot">
-            <img src={src} alt="" loading="lazy" decoding="async" />
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
-
 
 /** The three builds as Open Builds rows: plate, eyebrow, title, arrow. */
 function FunnelsPreview() {

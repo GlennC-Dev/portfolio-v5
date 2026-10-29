@@ -19,11 +19,49 @@ const FunnelBarrel = lazy(() => import('./FunnelBarrel'))
  */
 
 /** Only the strip of macOS windows, drifting on the backdrop. No window. */
-export function AutomationsPanel() {
+/** The Web Apps dialog: what is being built, stated plainly. No links and no
+ *  screenshots until an app is live - add a `href` to an entry to link it. */
+const WEB_APPS: { name: string; blurb: string; points: string[]; href?: string }[] = [
+  {
+    name: 'Personality hub',
+    blurb: 'A quiet place to reflect on how you work, built as a small set of self-reflection tests.',
+    points: ['Results stay in your browser', 'Email yourself a copy if you want one', 'Reflection, not diagnosis'],
+  },
+  {
+    name: 'Troubleshooting form',
+    blurb: 'A guided web form that walks someone through a problem and hands over a clean, complete report.',
+    points: ['Built as a static front end', 'Submissions routed through automation'],
+  },
+]
+
+export function WebAppsPanel() {
   return (
-    <div className="ppanel ppanel--strip">
-      <WorkflowSamples />
-    </div>
+    <SectionWindow label="Web Apps">
+      <div className="webapps">
+        <p className="webapps__lede">
+          Small apps built end to end, hosted on their own addresses. Both are in progress, so there is nothing to open yet.
+        </p>
+        <div className="webapps__grid">
+          {WEB_APPS.map((a) => (
+            <article className="webapps__card" key={a.name}>
+              <span className="webapps__status">In progress</span>
+              <h3>{a.name}</h3>
+              <p>{a.blurb}</p>
+              <ul>
+                {a.points.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+              {a.href ? (
+                <a className="webapps__link" href={a.href} target="_blank" rel="noreferrer">
+                  Open the app
+                </a>
+              ) : null}
+            </article>
+          ))}
+        </div>
+      </div>
+    </SectionWindow>
   )
 }
 
