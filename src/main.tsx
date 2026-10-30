@@ -7,7 +7,8 @@ import NotFound from '@/components/NotFound'
 import { restorePerfTier } from '@/lib/perf'
 import { restorePrefs } from '@/lib/a11y'
 
-// Every route but Home is its own chunk: the first visit only pays for Home.
+// Every route but Home is its own chunk: the first visit only pays for Home... added addl comment to force resync
+
 const ProjectsView = lazy(() => import('@/views/ProjectsView'))
 const ServicesView = lazy(() => import('@/views/ServicesView'))
 const ShowcaseView = lazy(() => import('@/views/ShowcaseView'))
